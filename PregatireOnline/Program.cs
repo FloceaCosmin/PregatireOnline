@@ -16,7 +16,7 @@ namespace PregatiriOnline
             Administrator admin = new Administrator("Cosmin", "cosmin@yahoo.com");
             AfisareAdministrator(admin);
 
-            Profesor prof1 = CitireProfesor();
+            Profesor prof1 = new Profesor("Matei", "matei@yahoo.com", "Mate", 0);
             Profesor prof2 = CitireProfesor();
 
             admin.AdaugaProfesor(prof1);
@@ -26,8 +26,8 @@ namespace PregatiriOnline
             Console.WriteLine("\nLista Profesorilor:");
             AfisareProfesori(admin);
 
-            
-            Elev elev1 = CitireElev();
+
+            Elev elev1 = new Elev("Marcu", "marcu@yahoo.com", "IV", 12);
             Elev elev2 = CitireElev();
 
             
