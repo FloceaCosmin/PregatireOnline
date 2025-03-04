@@ -7,20 +7,13 @@ using System.Threading.Tasks;
 
 namespace PregatiriOnline
 {
-    public class Administrator
+    public class Administrator : Utilizator
     {
-
-        public string Nume;
-        public string Email;
-
-        public Administrator(string nume, string email)
-        {
-            Nume = nume;
-            Email = email;
-        }
-
         private List<Profesor> profesori = new List<Profesor>();
-
+        public Administrator(string nume, string email)
+            : base(nume, email)
+        {
+        }
         public void AdaugaProfesor(Profesor profesor)
         {
             profesori.Add(profesor);
@@ -30,5 +23,11 @@ namespace PregatiriOnline
         {
             return profesori;
         }
+
+        public string Info()
+        {
+            return base.Info()+"(Administrator)";
+        }
     }
 }
+

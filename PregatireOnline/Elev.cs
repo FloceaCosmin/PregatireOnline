@@ -6,35 +6,21 @@ using System.Threading.Tasks;
 
 namespace PregatiriOnline
 {
-    public class Elev
+    public class Elev : Utilizator
     {
-        public string Nume { get; set; }
-        public string Clasa { get; set; }
-        public int Varsta { get; set; }
-        public string Email { get; set; }
+        public string Clasa;
+        public int Varsta;
 
-        public Elev(string nume, string clasa, int varsta, string email)
+        public Elev(string nume, string email, string clasa, int varsta)
+            : base(nume, email)
         {
-            Nume = nume;
             Clasa = clasa;
             Varsta = varsta;
-            Email = email;
         }
-        public Elev() { }
-        public void CitireElev()
+
+        public string Info()
         {
-            Console.WriteLine("Introdu numele elevului:");
-            Nume = Console.ReadLine();
-            Console.Write("Introdu clasa elevului: ");
-            Clasa = Console.ReadLine();
-            Console.Write("Introdu vârsta elevului: ");
-            Varsta = Convert.ToInt32(Console.ReadLine());
-            Console.Write("Introdu emailul elevului: ");
-            Email = Console.ReadLine();
-        }
-        public void AfisareElev()
-        {
-            Console.WriteLine($"Numele Elevului: {Nume}, clasa: {Clasa}, varsta:{Varsta} ani, email:{Email}");
+            return "Elev:"+base.Info() + $"Clasa: {Clasa}, Varsta: {Varsta}";
         }
     }
 }
