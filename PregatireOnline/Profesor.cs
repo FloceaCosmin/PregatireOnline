@@ -8,8 +8,8 @@ namespace PregatiriOnline
 {
     public class Profesor : Utilizator
     {
-        public string Materie;
-        public int Punctaj;
+        public string Materie { get; set; }
+        public int Punctaj { get; set; }
 
         public Profesor(string nume, string email, string materie, int punctaj)
             : base(nume, email)

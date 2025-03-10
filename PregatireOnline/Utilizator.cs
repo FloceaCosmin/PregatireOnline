@@ -8,8 +8,9 @@ namespace PregatiriOnline
 {
     public abstract class Utilizator
     {
-        public string Nume { get; }
-        public string Email { get; }
+        public string Nume { get; set; }
+        public string Email { get; set; }
+        public string TipUtilizator { get; set; }
 
         public Utilizator(string nume, string email)
         {
@@ -19,7 +20,7 @@ namespace PregatiriOnline
 
         public   virtual string Info()
         {
-            return $"Nume: {Nume}, Email: {Email}";
+            return $" {TipUtilizator}:  Nume: {Nume}, Email: {Email}";
         }
     }
 }

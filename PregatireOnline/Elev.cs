@@ -8,8 +8,8 @@ namespace PregatiriOnline
 {
     public class Elev : Utilizator
     {
-        public string Clasa;
-        public int Varsta;
+        public string Clasa { get; set; }
+        public int Varsta { get; set; }
 
         public Elev(string nume, string email, string clasa, int varsta)
             : base(nume, email)
