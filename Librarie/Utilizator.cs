@@ -20,7 +20,7 @@ namespace PregatiriOnline
 
         public   virtual string Info()
         {
-            return $" {TipUtilizator}:  Nume: {Nume}, Email: {Email}";
+            return $"{Nume},{Email}";
         }
     }
 }

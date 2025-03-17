@@ -20,7 +20,7 @@ namespace PregatiriOnline
 
         public  string Info()
         {
-            return base.Info() + $"Materie: {Materie}, Punctaj: {Punctaj}";
+            return   $"Profesor,{base.Info()},{Materie}, {Punctaj}";
         }
     }
 }

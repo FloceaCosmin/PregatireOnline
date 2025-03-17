@@ -20,7 +20,7 @@ namespace PregatiriOnline
 
         public string Info()
         {
-            return "Elev:"+base.Info() + $"Clasa: {Clasa}, Varsta: {Varsta}";
+            return $"Elev,{base.Info()},{Clasa},{Varsta}";
         }
     }
 }

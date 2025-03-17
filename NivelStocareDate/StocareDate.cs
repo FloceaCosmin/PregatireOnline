@@ -7,14 +7,12 @@ using System.Threading.Tasks;
 
 namespace PregatiriOnline
 {
-    public class Administrator : Utilizator
+    public class StocareDate
+
     {
         public List<Profesor> Profesori { get; private set; } = new List<Profesor>();
         public List<Elev> Elevi { get; private set; } = new List<Elev>();
-        public Administrator(string nume, string email)
-            : base(nume, email)
-        {
-        }
+
         public void AdaugaProfesor(Profesor profesor)
         {
             Profesori.Add(profesor);
@@ -22,11 +20,6 @@ namespace PregatiriOnline
         public void AdaugaElev(Elev elev)
         {
             Elevi.Add(elev);
-        }
-
-        public string Info()
-        {
-            return "Amininstrator"+base.Info();
         }
     }
 }

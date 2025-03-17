@@ -1,29 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NivelStocareDate;
+
+
 
 
 namespace PregatiriOnline
 {
     class Program
     {
+        static StocareDate stocare = new StocareDate();
         static Administrator admin = new Administrator("Cosmin", "cosmin@yahoo.com");
+
         static Profesor prof1 = new Profesor("Matei", "matei@yahoo.com", "Mate", 0);
         static Profesor prof2 = new Profesor("Ana", "ana@yahoo.com", "Matematica", 5);
         static Elev elev1 = new Elev("Marcu", "marcu@yahoo.com", "IV", 12);
         static Elev elev2 = new Elev("Ion", "ion@yahoo.com", "VIII", 14);
 
+
+        static string numeFisier = "date.txt";
+
+
         static void Main(string[] args)
         {
+            CitireDateDinFisier();
+
+
+            var administrareFisier = new AdministrareProfesoriElevi_FisierText(numeFisier);
+
             
-            admin.AdaugaProfesor(prof1);
-            admin.AdaugaProfesor(prof2);
-            admin.AdaugaElev(elev1);
-            admin.AdaugaElev(elev2);
+            stocare.AdaugaProfesor(prof1);
+            administrareFisier.AddProfesor(prof1); 
 
+            stocare.AdaugaProfesor(prof2);
+            administrareFisier.AddProfesor(prof2);
 
+            stocare.AdaugaElev(elev1);
+            administrareFisier.AddElev(elev1);
+
+            stocare.AdaugaElev(elev2);
+            administrareFisier.AddElev(elev2);
             bool running = true;
 
             while (running)
@@ -73,6 +93,28 @@ namespace PregatiriOnline
         
         static Utilizator ultimaCitire;
 
+        static void CitireDateDinFisier()
+        {
+            var administrareFisier = new AdministrareProfesoriElevi_FisierText(numeFisier);
+
+
+            int nrProfesori, nrElevi;
+
+            
+            Profesor[] profesori = administrareFisier.GetProfesori(out nrProfesori);
+            foreach (var profesor in profesori)
+            {
+                stocare.AdaugaProfesor(profesor);
+            }
+
+            
+            Elev[] elevi = administrareFisier.GetElevi(out nrElevi);
+            foreach (var elev in elevi)
+            {
+                stocare.AdaugaElev(elev);
+            }
+        }
+
         static void CitireObiect()
         {
             Console.WriteLine("\nAlege tipul de obiect de citit:");
@@ -107,7 +149,12 @@ namespace PregatiriOnline
             Profesor prof = CitireProfesor();
             prof.TipUtilizator = "Profesor";
             ultimaCitire = prof;
-            admin.AdaugaProfesor(prof);
+            stocare.AdaugaProfesor(prof);
+
+            
+            var administrareFisier = new AdministrareProfesoriElevi_FisierText(numeFisier);
+            administrareFisier.AddProfesor(prof);
+
             Console.WriteLine("Profesorul a fost adaugat.");
         }
 
@@ -116,7 +163,12 @@ namespace PregatiriOnline
             Elev elev = CitireElev();
             elev.TipUtilizator = "Elev";
             ultimaCitire = elev;
-            admin.AdaugaElev(elev);
+            stocare.AdaugaElev(elev);
+
+           
+            var administrareFisier = new AdministrareProfesoriElevi_FisierText(numeFisier);
+            administrareFisier.AddElev(elev);
+
             Console.WriteLine("Elevul a fost adaugat.");
         }
 
@@ -148,7 +200,7 @@ namespace PregatiriOnline
         static void AfisareProfesori(Administrator admin)
         {
             Console.WriteLine("\nLista Profesori:");
-            foreach (var profesor in admin.Profesori)
+            foreach (var profesor in stocare.Profesori)
             {
                 Console.WriteLine(profesor.Info());
             }
@@ -157,7 +209,7 @@ namespace PregatiriOnline
         static void AfisareElevi(Administrator admin)
         {
             Console.WriteLine("\nLista Elevi:");
-            foreach (var elev in admin.Elevi)
+            foreach (var elev in stocare.Elevi)
             {
                 Console.WriteLine(elev.Info());
             }
@@ -199,7 +251,7 @@ namespace PregatiriOnline
             Profesor profesorGasit = null;
 
             
-            foreach (var profesor in admin.Profesori)
+            foreach (var profesor in stocare.Profesori)
             {
                 if (profesor.Nume.ToLower().Contains(numeProfesor))
                 {
@@ -227,7 +279,7 @@ namespace PregatiriOnline
             Elev elevGasit = null;
 
            
-            foreach (var elev in admin.Elevi)
+            foreach (var elev in stocare.Elevi)
             {
                 if (elev.Nume.ToLower().Contains(numeElev)) 
                 {
