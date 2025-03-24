@@ -15,7 +15,7 @@ namespace PregatiriOnline
         {
         }
 
-        public string Info()
+        public  override string Info()
         {
             return "Amininstrator"+base.Info();
         }

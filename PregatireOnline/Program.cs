@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Librarie;
 using NivelStocareDate;
 
 
@@ -16,34 +17,33 @@ namespace PregatiriOnline
         static StocareDate stocare = new StocareDate();
         static Administrator admin = new Administrator("Cosmin", "cosmin@yahoo.com");
 
-        static Profesor prof1 = new Profesor("Matei", "matei@yahoo.com", "Mate", 0);
-        static Profesor prof2 = new Profesor("Ana", "ana@yahoo.com", "Matematica", 5);
+        static Profesor prof1 = new Profesor("Matei", "matei@yahoo.com", Materie.Matematica, 0);
+        static Profesor prof2 = new Profesor("Ana", "ana@yahoo.com", Materie.Informatica, 5);
         static Elev elev1 = new Elev("Marcu", "marcu@yahoo.com", "IV", 12);
         static Elev elev2 = new Elev("Ion", "ion@yahoo.com", "VIII", 14);
 
 
-        static string numeFisier = "date.txt";
+        static AdministrareProfesori_FisierText administrareProfesori = new AdministrareProfesori_FisierText("profesori.txt");
+        static AdministrareElevi_FisierText administrareElevi = new AdministrareElevi_FisierText("elevi.txt");
 
 
         static void Main(string[] args)
         {
             CitireDateDinFisier();
 
-
-            var administrareFisier = new AdministrareProfesoriElevi_FisierText(numeFisier);
-
             
             stocare.AdaugaProfesor(prof1);
-            administrareFisier.AddProfesor(prof1); 
+            administrareProfesori.AddProfesor(prof1); 
 
             stocare.AdaugaProfesor(prof2);
-            administrareFisier.AddProfesor(prof2);
+            administrareProfesori.AddProfesor(prof2);
 
             stocare.AdaugaElev(elev1);
-            administrareFisier.AddElev(elev1);
+            administrareElevi.AddElev(elev1);
 
             stocare.AdaugaElev(elev2);
-            administrareFisier.AddElev(elev2);
+            administrareElevi.AddElev(elev2);
+
             bool running = true;
 
             while (running)
@@ -95,20 +95,18 @@ namespace PregatiriOnline
 
         static void CitireDateDinFisier()
         {
-            var administrareFisier = new AdministrareProfesoriElevi_FisierText(numeFisier);
 
 
             int nrProfesori, nrElevi;
 
-            
-            Profesor[] profesori = administrareFisier.GetProfesori(out nrProfesori);
+
+            Profesor[] profesori = administrareProfesori.GetProfesori(out nrProfesori);
             foreach (var profesor in profesori)
             {
                 stocare.AdaugaProfesor(profesor);
             }
 
-            
-            Elev[] elevi = administrareFisier.GetElevi(out nrElevi);
+            Elev[] elevi = administrareElevi.GetElevi(out nrElevi);
             foreach (var elev in elevi)
             {
                 stocare.AdaugaElev(elev);
@@ -150,10 +148,7 @@ namespace PregatiriOnline
             prof.TipUtilizator = "Profesor";
             ultimaCitire = prof;
             stocare.AdaugaProfesor(prof);
-
-            
-            var administrareFisier = new AdministrareProfesoriElevi_FisierText(numeFisier);
-            administrareFisier.AddProfesor(prof);
+            administrareProfesori.AddProfesor(prof);
 
             Console.WriteLine("Profesorul a fost adaugat.");
         }
@@ -164,10 +159,7 @@ namespace PregatiriOnline
             elev.TipUtilizator = "Elev";
             ultimaCitire = elev;
             stocare.AdaugaElev(elev);
-
-           
-            var administrareFisier = new AdministrareProfesoriElevi_FisierText(numeFisier);
-            administrareFisier.AddElev(elev);
+            administrareElevi.AddElev(elev);
 
             Console.WriteLine("Elevul a fost adaugat.");
         }
@@ -246,19 +238,9 @@ namespace PregatiriOnline
         static void CautaProfesor()
         {
             Console.Write("Introduceti numele profesorului pe care doriti sa il cautati: ");
-            string numeProfesor = Console.ReadLine().ToLower();
+            string numeProfesor = Console.ReadLine();
 
-            Profesor profesorGasit = null;
-
-            
-            foreach (var profesor in stocare.Profesori)
-            {
-                if (profesor.Nume.ToLower().Contains(numeProfesor))
-                {
-                    profesorGasit = profesor;
-                    break; 
-                }
-            }
+            Profesor profesorGasit = Profesor.CautaProfesor(stocare.Profesori, numeProfesor);
 
             if (profesorGasit != null)
             {
@@ -274,19 +256,9 @@ namespace PregatiriOnline
         static void CautaElev()
         {
             Console.Write("Introduceti numele elevului pe care doriti sa il cautati: ");
-            string numeElev = Console.ReadLine().ToLower(); 
+            string numeElev = Console.ReadLine();
 
-            Elev elevGasit = null;
-
-           
-            foreach (var elev in stocare.Elevi)
-            {
-                if (elev.Nume.ToLower().Contains(numeElev)) 
-                {
-                    elevGasit = elev;
-                    break; 
-                }
-            }
+            Elev elevGasit = Elev.CautaElev(stocare.Elevi, numeElev);
 
             if (elevGasit != null)
             {
@@ -299,6 +271,9 @@ namespace PregatiriOnline
             }
         }
 
+
+
+
         static Profesor CitireProfesor()
         {
             Console.Write("Introduceti numele profesorului: ");
@@ -307,6 +282,7 @@ namespace PregatiriOnline
             string email = Console.ReadLine();
             Console.Write("Introduceti materia: ");
             string materie = Console.ReadLine();
+
             Console.Write("Introduceti punctajul: ");
             int punctaj = Convert.ToInt32(Console.ReadLine());
 
