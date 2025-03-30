@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Librarie;
 using PregatiriOnline;
 
 namespace NivelStocareDate
@@ -48,10 +49,10 @@ namespace NivelStocareDate
                             continue;
                         }
 
-                        string nume = date[1];
-                        string email = date[2];
-                        string clasa = date[3];
-                        int varsta = int.Parse(date[4]);
+                        string nume = date[0];
+                        string email = date[1];
+                        Clase clasa = (Clase)Enum.Parse(typeof(Clase), date[2]);
+                        int varsta = int.Parse(date[3]);
 
 
                         Elev elev = new Elev(nume, email, clasa, varsta);

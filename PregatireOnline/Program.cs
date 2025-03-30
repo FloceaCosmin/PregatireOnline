@@ -19,8 +19,8 @@ namespace PregatiriOnline
 
         static Profesor prof1 = new Profesor("Matei", "matei@yahoo.com", Materie.Matematica, 0);
         static Profesor prof2 = new Profesor("Ana", "ana@yahoo.com", Materie.Informatica, 5);
-        static Elev elev1 = new Elev("Marcu", "marcu@yahoo.com", "IV", 12);
-        static Elev elev2 = new Elev("Ion", "ion@yahoo.com", "VIII", 14);
+        static Elev elev1 = new Elev("Marcu", "marcu@yahoo.com", Clase.V, 12);
+        static Elev elev2 = new Elev("Ion", "ion@yahoo.com", Clase.VIII, 14);
 
 
         static AdministrareProfesori_FisierText administrareProfesori = new AdministrareProfesori_FisierText("profesori.txt");
@@ -280,13 +280,29 @@ namespace PregatiriOnline
             string nume = Console.ReadLine();
             Console.Write("Introduceti emailul: ");
             string email = Console.ReadLine();
-            Console.Write("Introduceti materia: ");
-            string materie = Console.ReadLine();
+            Console.WriteLine("Alegeti materiile (separate prin virgula, de exemplu: 1,3,5 pentru Matematica, Informatica si Chimie):");
+            Console.WriteLine("1 - Matematica");
+            Console.WriteLine("2 - Romana");
+            Console.WriteLine("3 - Informatica");
+            Console.WriteLine("4 - Biologie");
+            Console.WriteLine("5 - Chimie");
 
+            string materiiSelectate = Console.ReadLine();
+            string[] optiuni = materiiSelectate.Split(',');
+
+            Materie materiiAlese = Materie.Nimic;
+
+            foreach (var optiune in optiuni)
+            {
+                int optiuneIndex = Convert.ToInt32(optiune.Trim());
+                materiiAlese |= (Materie)(1 << (optiuneIndex - 1)); // |= ->OR între biți și atribuie rezultatul în variabila din stânga.
+            }
+
+            Console.WriteLine($"Materiile alese sunt: {materiiAlese}");
             Console.Write("Introduceti punctajul: ");
             int punctaj = Convert.ToInt32(Console.ReadLine());
 
-            return new Profesor(nume, email, materie, punctaj);
+            return new Profesor(nume, email, materiiAlese, punctaj);
         }
 
         static Elev CitireElev()
@@ -295,12 +311,26 @@ namespace PregatiriOnline
             string nume = Console.ReadLine();
             Console.Write("Introduceti emailul: ");
             string email = Console.ReadLine();
-            Console.Write("Introduceti clasa: ");
-            string clasa = Console.ReadLine();
+            Console.WriteLine("Alegeti clasa elevului: ");
+            Console.WriteLine("1 - Clasa I");
+            Console.WriteLine("2 - Clasa II");
+            Console.WriteLine("3 - Clasa III");
+            Console.WriteLine("4 - Clasa IV");
+            Console.WriteLine("5 - Clasa V");
+            Console.WriteLine("6 - Clasa VI");
+            Console.WriteLine("7 - Clasa VII");
+            Console.WriteLine("8 - Clasa VIII");
+            Console.WriteLine("9 - Clasa IX");
+            Console.WriteLine("10 - Clasa X");
+
+            int optiune = Convert.ToInt32(Console.ReadLine());
+            Clase clasaAleasa = (Clase)optiune;
+
+            Console.WriteLine($"Clasa aleasa este: {clasaAleasa}");
             Console.Write("Introduceti varsta: ");
             int varsta = Convert.ToInt32(Console.ReadLine());
 
-            return new Elev(nume, email, clasa, varsta);
+            return new Elev(nume, email, clasaAleasa, varsta);
         }
 
         static Administrator CitireAdministrator()

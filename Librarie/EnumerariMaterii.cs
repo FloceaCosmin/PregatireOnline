@@ -1,11 +1,15 @@
-﻿namespace Librarie
+﻿using System;
+
+namespace Librarie
 {
+    [Flags]
     public enum Materie
     {
-        Matematica=1,
-        Romana=2,
-        Informatica=3,
-        Biologie=4,
-        Chimie=5
+        Nimic = 0,            // 0000
+        Matematica = 1,       // 0001
+        Romana = 2,           // 0010
+        Informatica = 4,      // 0100
+        Biologie = 8,         // 1000
+        Chimie = 16           // 10000
     }
 }

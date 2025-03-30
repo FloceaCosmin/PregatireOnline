@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Librarie;
 
 namespace PregatiriOnline
 {
     public class Elev : Utilizator
     {
-        public string Clasa { get; set; }
+        public Clase Clasa { get; set; }
         public int Varsta { get; set; }
 
-        public Elev(string nume, string email, string clasa, int varsta)
+        public Elev(string nume, string email, Clase clasa, int varsta)
             : base(nume, email)
         {
             Clasa = clasa;

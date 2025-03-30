@@ -9,19 +9,19 @@ namespace PregatiriOnline
 {
     public class Profesor : Utilizator
     {
-        public  Materie MateriePredata { get; set; }
+        public  Materie Materie { get; set; }
         public int Punctaj { get; set; }
 
-        public Profesor(string nume, string email,Materie materiePredata, int punctaj)
+        public Profesor(string nume, string email, Materie materie, int punctaj)
             : base(nume, email)
         {
-            MateriePredata = materiePredata;
+             Materie = materie;
             Punctaj = punctaj;
         }
 
         public  override string Info()
         {
-            return   $"Profesor,{base.Info()},{MateriePredata}, {Punctaj}";
+            return   $"Profesor,{base.Info()},{Materie}, {Punctaj}";
         }
 
         public static Profesor CautaProfesor(List<Profesor> profesori, string numeProfesor)
@@ -38,7 +38,7 @@ namespace PregatiriOnline
 
         public string ScrieInFisier()
         {
-            return $"{Nume};{Email};{MateriePredata};{Punctaj}";
+            return $"{Nume};{Email};{Materie};{Punctaj}";
         }
 
     }

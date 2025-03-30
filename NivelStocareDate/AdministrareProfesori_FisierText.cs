@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Librarie;
 using PregatiriOnline;
 
 namespace NivelStocareDate
@@ -43,7 +44,7 @@ namespace NivelStocareDate
                         var date = linie.Split(',');
                         string nume = date[1];
                         string email = date[2];
-                        string materie = date[3];
+                        Materie materie = (Materie)Enum.Parse(typeof(Materie), date[3]);
                         int punctaj = int.Parse(date[4]);
 
 
