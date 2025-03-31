@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -22,13 +23,24 @@ namespace PregatiriOnline
         static Elev elev1 = new Elev("Marcu", "marcu@yahoo.com", Clase.V, 12);
         static Elev elev2 = new Elev("Ion", "ion@yahoo.com", Clase.VIII, 14);
 
+        static AdministrareElevi_FisierText administrareElevi = null;
+        static AdministrareProfesori_FisierText administrareProfesori=null;
 
-        static AdministrareProfesori_FisierText administrareProfesori = new AdministrareProfesori_FisierText("profesori.txt");
-        static AdministrareElevi_FisierText administrareElevi = new AdministrareElevi_FisierText("elevi.txt");
 
 
         static void Main(string[] args)
         {
+            string numeFisier1 = ConfigurationManager.AppSettings["NumeFisier1"];
+            string locatieFisierSolutie1 = Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.FullName;
+            string caleCompletaFisier1 = locatieFisierSolutie1 + "\\" + numeFisier1;
+
+            string numeFisier2 = ConfigurationManager.AppSettings["NumeFisier2"];
+            string locatieFisierSolutie2 = Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.FullName;
+            string caleCompletaFisier2 = locatieFisierSolutie2 + "\\" + numeFisier2;
+
+            administrareProfesori = new AdministrareProfesori_FisierText(caleCompletaFisier1);
+            administrareElevi = new AdministrareElevi_FisierText(caleCompletaFisier2);
+
             CitireDateDinFisier();
 
             
@@ -95,6 +107,7 @@ namespace PregatiriOnline
 
         static void CitireDateDinFisier()
         {
+
 
 
             int nrProfesori, nrElevi;

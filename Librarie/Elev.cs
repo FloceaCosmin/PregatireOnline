@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Librarie;
 
-namespace PregatiriOnline
+namespace Librarie
 {
     public class Elev : Utilizator
     {

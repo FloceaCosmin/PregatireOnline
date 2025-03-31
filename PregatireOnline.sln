@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NivelStocareDate", "NivelSt
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Librarie", "Librarie\Librarie.csproj", "{74DCE560-4B6C-4273-9A0F-D3B3A9C194F6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InterfataUtilizator_WidowsForms", "InterfataUtilizator_WidowsForms\InterfataUtilizator_WidowsForms.csproj", "{2946C0CE-E791-4E86-855F-E613FAE9B2EE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{74DCE560-4B6C-4273-9A0F-D3B3A9C194F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74DCE560-4B6C-4273-9A0F-D3B3A9C194F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74DCE560-4B6C-4273-9A0F-D3B3A9C194F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2946C0CE-E791-4E86-855F-E613FAE9B2EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2946C0CE-E791-4E86-855F-E613FAE9B2EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2946C0CE-E791-4E86-855F-E613FAE9B2EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2946C0CE-E791-4E86-855F-E613FAE9B2EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

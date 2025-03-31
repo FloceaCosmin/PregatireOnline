@@ -1,0 +1,5 @@
+Matei;matei@yahoo.com;Matematica;0
+Ana;ana@yahoo.com;Informatica;5
+Matei;matei@yahoo.com;Matematica;0
+Ana;ana@yahoo.com;Informatica;5
+Cosmin;cosmin@yahoo.com;Matematica;5

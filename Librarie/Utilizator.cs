@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PregatiriOnline
+namespace Librarie
 {
     public abstract class Utilizator
     {

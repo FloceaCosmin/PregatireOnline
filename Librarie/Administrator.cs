@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace PregatiriOnline
+namespace Librarie
 {
     public class Administrator : Utilizator
     {

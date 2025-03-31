@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using Librarie;
-using PregatiriOnline;
 
 namespace NivelStocareDate
 {
@@ -38,21 +37,18 @@ namespace NivelStocareDate
                 while ((linie = reader.ReadLine()) != null)
                 {
 
-                    if (linie.StartsWith("Profesor"))
-                    {
-
-                        var date = linie.Split(',');
-                        string nume = date[1];
-                        string email = date[2];
-                        Materie materie = (Materie)Enum.Parse(typeof(Materie), date[3]);
-                        int punctaj = int.Parse(date[4]);
+                        var date = linie.Split(';');
+                        string nume = date[0];
+                        string email = date[1];
+                        Materie materie = (Materie)Enum.Parse(typeof(Materie), date[2]);
+                        int punctaj = int.Parse(date[3]);
 
 
                         Profesor profesor = new Profesor(nume, email, materie, punctaj);
 
                         profesori.Add(profesor);
                         nrProfesori++;
-                    }
+                    
                 }
             }
 
