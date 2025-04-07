@@ -17,7 +17,7 @@ namespace Librarie
 
         public  override string Info()
         {
-            return "Amininstrator"+base.Info();
+            return "Amininstrator:"+base.Info();
         }
     }
 }

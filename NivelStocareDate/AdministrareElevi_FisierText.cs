@@ -37,16 +37,7 @@ namespace NivelStocareDate
                 while ((linie = reader.ReadLine()) != null)
                 {
 
-                    if (linie.StartsWith("Elev"))
-                    {
-
-                        var date = linie.Split(',');
-
-                        if (date.Length < 5)
-                        {
-                            Console.WriteLine($" Linia este invalidă: {linie}");
-                            continue;
-                        }
+                        var date = linie.Split(';');
 
                         string nume = date[0];
                         string email = date[1];
@@ -58,7 +49,7 @@ namespace NivelStocareDate
 
                         elevi.Add(elev);
                         nrElevi++;
-                    }
+                    
                 }
             }
 

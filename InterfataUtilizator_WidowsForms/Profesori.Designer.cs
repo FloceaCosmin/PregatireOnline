@@ -1,6 +1,6 @@
 ﻿namespace InterfataUtilizator_WindowsForms
 {
-    public partial class Form1
+    public partial class Profesori
     {
         /// <summary>
         /// Required designer variable.
@@ -31,8 +31,8 @@
             this.components = new System.ComponentModel.Container();
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Load += new System.EventHandler(this.Form1_Load);
-            this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Profesori_Load);
+            this.Text = "Profesori";
         }
 
         #endregion
