@@ -139,6 +139,8 @@ namespace InterfataUtilizator_WindowsForms
             this.Controls.Add(lblAdminInfo);
         }
 
+
+
         private void AfiseazaElevi()
         {
             Elev[] elevi = adminElevi.GetElevi(out int nrElevi);
@@ -194,6 +196,13 @@ namespace InterfataUtilizator_WindowsForms
                 this.Controls.Add(lblsVarsta[i]);
 
             }
+        }
+
+        private void btnBack_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            MainForm mainForm = new MainForm();
+            mainForm.Show();
         }
     }
 }

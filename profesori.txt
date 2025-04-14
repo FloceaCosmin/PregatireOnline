@@ -1,2 +1,2 @@
-Matei;matei@yahoo.com;Matematica;4
-Alexandra;ale@yahoo.com;Informatica;3
+Matei;matie@yahoo.com;Informatica;4
+Marcu;marcu@yahoo.com;Chimie;7

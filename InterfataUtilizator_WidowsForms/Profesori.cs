@@ -6,6 +6,8 @@ using System.Configuration;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using InterfataUtilizator_WidowsForms;
+using System.Linq;
 
 namespace InterfataUtilizator_WindowsForms
 {
@@ -43,6 +45,70 @@ namespace InterfataUtilizator_WindowsForms
         public Profesori()
         {
             InitializeComponent();
+            ////////////
+
+            
+            Panel panelMeniu = new Panel
+            {
+                Width = 100,
+                Height = this.ClientSize.Height,
+                BackColor = Color.LightSlateGray,
+                Dock = DockStyle.Left,
+                Text="Meniu"
+            };
+            this.Controls.Add(panelMeniu);
+
+            
+            Button btnMeniuAdaugare = new Button
+            {
+                Text = "Adăugare\nProfesori",
+                Width = 80,
+                Height = 40,
+                Top = 20,
+                Left = 10,
+                BackColor = Color.MediumSlateBlue,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat
+            };
+            btnMeniuAdaugare.FlatAppearance.BorderSize = 0;
+            btnMeniuAdaugare.Click += btnAdaugaProfesor_Click; 
+            panelMeniu.Controls.Add(btnMeniuAdaugare);
+
+            
+            Button btnCautaProfesor = new Button
+            {
+                Text = "Caută\nProfesor",
+                Width = 80,
+                Height = 40,
+                Top = 70,
+                Left = 10,
+                BackColor = Color.MediumSlateBlue,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat
+            };
+            btnCautaProfesor.Click += btnCautaProfesor_Click;
+
+            
+            btnCautaProfesor.FlatAppearance.BorderSize = 0;
+            panelMeniu.Controls.Add(btnCautaProfesor);
+
+            
+            Button btnElevi = new Button
+            {
+                Text = "Lista Elevi",
+                Width = 80,
+                Height = 40,
+                Top = 120,
+                Left = 10,
+                BackColor = Color.MediumSlateBlue,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat
+            };
+            btnElevi.FlatAppearance.BorderSize = 0;
+            btnElevi.Click += BtnElevi_Click;
+            panelMeniu.Controls.Add(btnElevi);
+
+
             
 
             string numeFisier1 = ConfigurationManager.AppSettings["NumeFisier1"];
@@ -192,7 +258,7 @@ namespace InterfataUtilizator_WindowsForms
                 Text = "",
                 Visible = false
             };
-            this.Controls.Add(lblEroarePunctaj);
+            this.Controls.Add(lblEroareMaterie);
 
 
             Label lblPunctajInput = new Label
@@ -315,7 +381,7 @@ namespace InterfataUtilizator_WindowsForms
             }
 
 
-            // 2. Convertire materii bifate în enum (dacă e CheckedListBox)
+            
             Materie materieSelectata = Materie.Nimic;
             if (cmbMaterie.SelectedItem != null)
             {
@@ -328,19 +394,107 @@ namespace InterfataUtilizator_WindowsForms
             }
 
 
-            // 3. Creare obiect Profesor
+            
             Profesor profesorNou = new Profesor(nume, email, materieSelectata, punctaj);
 
-            // 4. Salvare în fișier
+            
             adminProfesori.AddProfesor(profesorNou);
 
             
-            Profesori_Load(this, EventArgs.Empty); // reafișează
+            Profesori_Load(this, EventArgs.Empty);
                                                    
             txtNume.Text = string.Empty;
             txtEmail.Text = string.Empty;
             txtPunctaj.Text = string.Empty;
             cmbMaterie.SelectedIndex = -1;
+        }
+
+
+        private void BtnElevi_Click(object sender, EventArgs e)
+        {
+            Elevi frmElevi = new Elevi();
+            frmElevi.Show(); 
+        }
+
+        private void btnBack_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            MainForm mainForm = new MainForm();
+            mainForm.Show();
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnCautaProfesor_Click(object sender, EventArgs e)
+        {
+            string cautaNume = txtNume.Text.Trim(); // Poți să folosești și alt câmp pentru căutare, de exemplu email sau materie
+
+            if (string.IsNullOrEmpty(cautaNume))
+            {
+                MessageBox.Show("Introduceți un nume de profesor pentru căutare.");
+                return;
+            }
+
+            // Filtrăm profesori după nume
+            var profesoriGasiti = adminProfesori.GetProfesori(out int nrProfesori)
+                .Where(profesor => profesor.Nume.ToLower().Contains(cautaNume.ToLower()))
+                .ToArray(); // Căutarea este insensibilă la majuscule/minuscule
+
+            if (profesoriGasiti.Length == 0)
+            {
+                MessageBox.Show("Nu s-a găsit niciun profesor cu acest nume.");
+                return;
+            }
+
+            // Curățăm etichetele existente pentru a nu le suprapune pe cele noi
+            foreach (var lbl in lblsNumeP)
+                this.Controls.Remove(lbl);
+            foreach (var lbl in lblsEmail)
+                this.Controls.Remove(lbl);
+            foreach (var lbl in lblsMaterii)
+                this.Controls.Remove(lbl);
+            foreach (var lbl in lblsPunctaj)
+                this.Controls.Remove(lbl);
+
+            // Actualizăm lista cu profesori găsiți
+            lblsNumeP = new Label[profesoriGasiti.Length];
+            lblsEmail = new Label[profesoriGasiti.Length];
+            lblsMaterii = new Label[profesoriGasiti.Length];
+            lblsPunctaj = new Label[profesoriGasiti.Length];
+
+            for (int i = 0; i < profesoriGasiti.Length; i++)
+            {
+                lblsNumeP[i] = new Label();
+                lblsNumeP[i].Width = LATIME_CONTROL;
+                lblsNumeP[i].Text = profesoriGasiti[i].Nume;
+                lblsNumeP[i].Left = DIMENSIUNE_PAS_X;
+                lblsNumeP[i].Top = (i + 1) * DIMENSIUNE_PAS_Y;
+                this.Controls.Add(lblsNumeP[i]);
+
+                lblsEmail[i] = new Label();
+                lblsEmail[i].Width = LATIME_CONTROL;
+                lblsEmail[i].Text = profesoriGasiti[i].Email;
+                lblsEmail[i].Left = 2 * DIMENSIUNE_PAS_X;
+                lblsEmail[i].Top = (i + 1) * DIMENSIUNE_PAS_Y;
+                this.Controls.Add(lblsEmail[i]);
+
+                lblsMaterii[i] = new Label();
+                lblsMaterii[i].Width = LATIME_CONTROL;
+                lblsMaterii[i].Text = profesoriGasiti[i].Materie.ToString();
+                lblsMaterii[i].Left = 3 * DIMENSIUNE_PAS_X;
+                lblsMaterii[i].Top = (i + 1) * DIMENSIUNE_PAS_Y;
+                this.Controls.Add(lblsMaterii[i]);
+
+                lblsPunctaj[i] = new Label();
+                lblsPunctaj[i].Width = LATIME_CONTROL;
+                lblsPunctaj[i].Text = profesoriGasiti[i].Punctaj.ToString();
+                lblsPunctaj[i].Left = 4 * DIMENSIUNE_PAS_X;
+                lblsPunctaj[i].Top = (i + 1) * DIMENSIUNE_PAS_Y;
+                this.Controls.Add(lblsPunctaj[i]);
+            }
         }
 
 

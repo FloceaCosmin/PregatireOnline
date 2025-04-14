@@ -17,8 +17,9 @@ namespace InterfataUtilizator_WidowsForms
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Profesori());
-            Application.Run(new Elevi());
+            //Application.Run(new Profesori());
+            Application.Run(new MainForm());
+            //Application.Run(new Elevi());
         }
     }
 }
