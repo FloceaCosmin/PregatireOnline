@@ -1,2 +1,5 @@
 Matei;matie@yahoo.com;Informatica;4
 Marcu;marcu@yahoo.com;Chimie;7
+cosmin;ewfcdqd;Romana;3
+MARCEL;MARCEL@;Informatica;4
+REG;GWEW;Chimie;4

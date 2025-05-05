@@ -204,5 +204,10 @@ namespace InterfataUtilizator_WindowsForms
             MainForm mainForm = new MainForm();
             mainForm.Show();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

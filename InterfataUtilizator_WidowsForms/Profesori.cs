@@ -45,7 +45,6 @@ namespace InterfataUtilizator_WindowsForms
         public Profesori()
         {
             InitializeComponent();
-            ////////////
 
             
             Panel panelMeniu = new Panel
@@ -430,7 +429,7 @@ namespace InterfataUtilizator_WindowsForms
 
         private void btnCautaProfesor_Click(object sender, EventArgs e)
         {
-            string cautaNume = txtNume.Text.Trim(); // Poți să folosești și alt câmp pentru căutare, de exemplu email sau materie
+            string cautaNume = txtNume.Text.Trim(); 
 
             if (string.IsNullOrEmpty(cautaNume))
             {
@@ -438,10 +437,10 @@ namespace InterfataUtilizator_WindowsForms
                 return;
             }
 
-            // Filtrăm profesori după nume
+            
             var profesoriGasiti = adminProfesori.GetProfesori(out int nrProfesori)
                 .Where(profesor => profesor.Nume.ToLower().Contains(cautaNume.ToLower()))
-                .ToArray(); // Căutarea este insensibilă la majuscule/minuscule
+                .ToArray(); 
 
             if (profesoriGasiti.Length == 0)
             {
@@ -449,7 +448,6 @@ namespace InterfataUtilizator_WindowsForms
                 return;
             }
 
-            // Curățăm etichetele existente pentru a nu le suprapune pe cele noi
             foreach (var lbl in lblsNumeP)
                 this.Controls.Remove(lbl);
             foreach (var lbl in lblsEmail)
@@ -459,7 +457,6 @@ namespace InterfataUtilizator_WindowsForms
             foreach (var lbl in lblsPunctaj)
                 this.Controls.Remove(lbl);
 
-            // Actualizăm lista cu profesori găsiți
             lblsNumeP = new Label[profesoriGasiti.Length];
             lblsEmail = new Label[profesoriGasiti.Length];
             lblsMaterii = new Label[profesoriGasiti.Length];
@@ -497,7 +494,14 @@ namespace InterfataUtilizator_WindowsForms
             }
         }
 
+        private void radioButtonAdaugare_CheckedChanged(object sender, EventArgs e)
+        {
 
+        }
 
+        private void radioButtonEditare_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
