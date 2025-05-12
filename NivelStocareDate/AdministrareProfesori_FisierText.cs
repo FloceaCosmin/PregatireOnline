@@ -36,24 +36,55 @@ namespace NivelStocareDate
                 string linie;
                 while ((linie = reader.ReadLine()) != null)
                 {
+                    var date = linie.Split(';');
+                    string nume = date[0];
+                    string email = date[1];
 
-                        var date = linie.Split(';');
-                        string nume = date[0];
-                        string email = date[1];
-                        Materie materie = (Materie)Enum.Parse(typeof(Materie), date[2]);
-                        int punctaj = int.Parse(date[3]);
+                    List<Materie> materii = new List<Materie>();
+                    string[] materiiText = date[2].Split('|');
+                    foreach (var materieText in materiiText)
+                    {
+                        if (!string.IsNullOrWhiteSpace(materieText))
+                        {
+                            materii.Add((Materie)Enum.Parse(typeof(Materie), materieText.Trim()));
+                        }
+                    }
 
+                    int punctaj = int.Parse(date[3]);
 
-                        Profesor profesor = new Profesor(nume, email, materie, punctaj);
-
-                        profesori.Add(profesor);
-                        nrProfesori++;
-                    
+                    Profesor profesor = new Profesor(nume, email, materii, punctaj);
+                    profesori.Add(profesor);
+                    nrProfesori++;
                 }
             }
 
             return profesori.ToArray();
         }
+
+        public void UpdateProfesor(Profesor profesorActualizat)
+        {
+            Profesor[] profesori = GetProfesori(out int nrProfesori);
+
+            for (int i = 0; i < nrProfesori; i++)
+            {
+                if (profesori[i].Email == profesorActualizat.Email)
+                {
+                    profesori[i] = profesorActualizat;
+                    break;
+                }
+            }
+
+            
+            using (StreamWriter writer = new StreamWriter(numeFisier, false))
+            {
+                foreach (var profesor in profesori)
+                {
+                    writer.WriteLine(profesor.ScrieInFisier());
+                }
+            }
+        }
+
+
 
     }
 }

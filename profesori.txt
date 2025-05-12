@@ -1,5 +1,6 @@
-Matei;matie@yahoo.com;Informatica;4
-Marcu;marcu@yahoo.com;Chimie;7
-cosmin;ewfcdqd;Romana;3
-MARCEL;MARCEL@;Informatica;4
-REG;GWEW;Chimie;4
+Matei;matei@yahoo.com;Biologie|Chimie;5
+Cosmin;cosmin@yahoo.com;Informatica;5
+mihaela;alexandra;Matematica;5
+Mihai;maihi@yahoo.com;Romana;4
+Sebastian;sebi@yahoo.com;Informatica;3
+Matei;matei@gmail.com;Biologie;4

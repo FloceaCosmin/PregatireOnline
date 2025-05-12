@@ -17,8 +17,6 @@ namespace InterfataUtilizator_WindowsForms
 
         private TextBox txtNume;
         private TextBox txtEmail;
-        private TextBox txtPunctaj;
-        private ComboBox cmbMaterie;
 
 
         private Label lblNumeP;
@@ -28,7 +26,6 @@ namespace InterfataUtilizator_WindowsForms
         private Label lblAdminInfo;
         private Button btnAdaugaProfesor;
         private Label lblEroarePunctaj;
-        private Label lblEroareMaterie;
 
 
         private Label[] lblsNumeP;
@@ -41,12 +38,19 @@ namespace InterfataUtilizator_WindowsForms
         private const int DIMENSIUNE_PAS_X = 150;
         Administrator admin = new Administrator("Cosmin", "cosmin@yahoo.com");
 
+        private Panel panelListaProfesori;
+        private Panel panelAdaugareProfesor;
+        private Panel panelCautareProfesor;
+
+        private CheckBox[] checkBoxMaterii;
+        private RadioButton[] radioButtonsPunctaj;
+
+
 
         public Profesori()
         {
             InitializeComponent();
 
-            
             Panel panelMeniu = new Panel
             {
                 Width = 100,
@@ -57,7 +61,29 @@ namespace InterfataUtilizator_WindowsForms
             };
             this.Controls.Add(panelMeniu);
 
-            
+            panelListaProfesori = new Panel
+            {
+                Dock = DockStyle.Fill,
+                Visible = false
+            };
+            this.Controls.Add(panelListaProfesori);
+
+            panelAdaugareProfesor = new Panel
+            {
+                Dock = DockStyle.Fill,
+                Visible = false
+            };
+            this.Controls.Add(panelAdaugareProfesor);
+
+            panelCautareProfesor = new Panel
+            {
+                Dock = DockStyle.Fill,
+                Visible = false
+            };
+            this.Controls.Add(panelCautareProfesor);
+
+
+
             Button btnMeniuAdaugare = new Button
             {
                 Text = "Adăugare\nProfesori",
@@ -121,7 +147,7 @@ namespace InterfataUtilizator_WindowsForms
 
             Profesor[] profesori = adminProfesori.GetProfesori(out nrProfesori);
 
-            this.Size = new Size(900, 500);
+            this.Size = new Size(1000, 500);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.Font = new Font("Arial", 10, FontStyle.Bold);
             this.ForeColor = Color.Navy;
@@ -177,7 +203,7 @@ namespace InterfataUtilizator_WindowsForms
 
             btnAdaugaProfesor = new Button();
             btnAdaugaProfesor.Text = "Adauga Profesor";
-            btnAdaugaProfesor.Left = 5 * DIMENSIUNE_PAS_X;
+            btnAdaugaProfesor.Left = 6 * DIMENSIUNE_PAS_X;
             btnAdaugaProfesor.Top = 10;
             btnAdaugaProfesor.BackColor = Color.BlueViolet;
             btnAdaugaProfesor.ForeColor = Color.White;
@@ -189,7 +215,7 @@ namespace InterfataUtilizator_WindowsForms
             Label lblNumeInput = new Label
             {
                 Text = "Nume:",
-                Left = 5 * DIMENSIUNE_PAS_X,
+                Left = 6 * DIMENSIUNE_PAS_X,
                 Top = 60,
                 Width = LATIME_CONTROL
             };
@@ -197,7 +223,7 @@ namespace InterfataUtilizator_WindowsForms
 
             txtNume = new TextBox
             {
-                Left = 5 * DIMENSIUNE_PAS_X,
+                Left = 6 * DIMENSIUNE_PAS_X,
                 Top = 80,
                 Width = LATIME_CONTROL
             };
@@ -206,7 +232,7 @@ namespace InterfataUtilizator_WindowsForms
             Label lblEmailInput = new Label
             {
                 Text = "Email:",
-                Left = 5 * DIMENSIUNE_PAS_X,
+                Left = 6 * DIMENSIUNE_PAS_X,
                 Top = 120,
                 Width = LATIME_CONTROL
             };
@@ -214,7 +240,7 @@ namespace InterfataUtilizator_WindowsForms
 
             txtEmail = new TextBox
             {
-                Left = 5 * DIMENSIUNE_PAS_X,
+                Left = 6 * DIMENSIUNE_PAS_X,
                 Top = 140,
                 Width = LATIME_CONTROL
             };
@@ -223,64 +249,96 @@ namespace InterfataUtilizator_WindowsForms
             Label lblMaterieInput = new Label
             {
                 Text = "Materie:",
-                Left = 5 * DIMENSIUNE_PAS_X,
+                Left = 6 * DIMENSIUNE_PAS_X,
                 Top = 180,
                 Width = LATIME_CONTROL
             };
             this.Controls.Add(lblMaterieInput);
 
-            cmbMaterie = new ComboBox
+           
+            Panel panelMaterii = new Panel
             {
-                Left = 5 * DIMENSIUNE_PAS_X,
+                Left = 6 * DIMENSIUNE_PAS_X,
                 Top = 200,
-                Width = LATIME_CONTROL,
-                DropDownStyle = ComboBoxStyle.DropDownList 
+                Width = LATIME_CONTROL * 2,
+                Height = 100,
+                BorderStyle = BorderStyle.FixedSingle
             };
+            this.Controls.Add(panelMaterii);
 
-            
-            foreach (var materie in Enum.GetValues(typeof(Materie)))
+
+            List<Materie> listaMaterii = new List<Materie>();
+
+            foreach (Materie materie in Enum.GetValues(typeof(Materie)))
             {
-                if ((Materie)materie != Materie.Nimic)
-                    cmbMaterie.Items.Add(materie);
+                if (materie != Materie.Nimic)
+                {
+                    listaMaterii.Add(materie);
+                }
             }
 
-            this.Controls.Add(cmbMaterie);
+            Materie[] materii = listaMaterii.ToArray();
 
-            lblEroareMaterie = new Label
+
+            checkBoxMaterii = new CheckBox[materii.Length];
+            int checkBoxWidth = LATIME_CONTROL - 20;
+            int checkBoxHeight = 25;
+            int coloanaWidth = checkBoxWidth;
+            int nrPerColoana = (materii.Length + 1) / 2;
+
+            for (int i = 0; i < materii.Length; i++)
             {
-                Left = 5 * DIMENSIUNE_PAS_X,
-                Top = 20,
-                Height = 30,
-                Width = LATIME_CONTROL,
-                ForeColor = Color.Red,
-                Font = new Font("Arial", 8, FontStyle.Regular),
-                Text = "",
-                Visible = false
-            };
-            this.Controls.Add(lblEroareMaterie);
-
+                checkBoxMaterii[i] = new CheckBox
+                {
+                    Text = materii[i].ToString(),
+                    Width = checkBoxWidth,
+                    Height = checkBoxHeight,
+                    Left = (i >= nrPerColoana ? coloanaWidth : 0) + 10,
+                    Top = ((i % nrPerColoana) * checkBoxHeight) + 5,
+                    Font = new Font("Arial", 9)
+                };
+                panelMaterii.Controls.Add(checkBoxMaterii[i]);
+            }
 
             Label lblPunctajInput = new Label
             {
                 Text = "Punctaj:",
-                Left = 5 * DIMENSIUNE_PAS_X,
-                Top = 240,
-                Width = LATIME_CONTROL
+                Left = 6 * DIMENSIUNE_PAS_X,
+                Top = 300, 
+                Width = LATIME_CONTROL,
             };
             this.Controls.Add(lblPunctajInput);
 
-            txtPunctaj = new TextBox
+
+            Panel panelPunctaj = new Panel
             {
-                Left = 5 * DIMENSIUNE_PAS_X,
-                Top = 260,
-                Width = LATIME_CONTROL
+                Left = 6 * DIMENSIUNE_PAS_X,
+                Top = 320,
+                Width = LATIME_CONTROL * 2,
+                Height = 60,
+                BorderStyle = BorderStyle.FixedSingle
             };
-            this.Controls.Add(txtPunctaj);
+            this.Controls.Add(panelPunctaj);
+
+            radioButtonsPunctaj = new RadioButton[5];
+            for (int i = 0; i < 5; i++)
+            {
+                radioButtonsPunctaj[i] = new RadioButton
+                {
+                    Text = (i + 1).ToString(),
+                    Left = 10 + i * 30, 
+                    Top = 20,
+                    Width = 30,
+                    Height = 20
+                };
+                panelPunctaj.Controls.Add(radioButtonsPunctaj[i]);
+            }
+
 
             lblEroarePunctaj = new Label
             {
-                Left = 5 * DIMENSIUNE_PAS_X,
-                Top = 290,
+                Left = 6 * DIMENSIUNE_PAS_X,
+                Top = 370,
                 Height = 30,
                 Width = LATIME_CONTROL,
                 ForeColor = Color.Red,
@@ -306,13 +364,14 @@ namespace InterfataUtilizator_WindowsForms
             lblAdminInfo = new Label
             {
                 Text = admin.Info(),
-                Left = this.ClientSize.Width - 300,
-                Top = this.ClientSize.Height - 30,
+                Left = this.ClientSize.Width-300,
+                Top = this.ClientSize.Height - 50,
                 Width = 280,
                 TextAlign = ContentAlignment.MiddleCenter,
                 Font = new Font("Arial", 10, FontStyle.Regular),
                 ForeColor = Color.Black
             };
+            lblAdminInfo.BringToFront();
             this.Controls.Add(lblAdminInfo);
         }
 
@@ -344,10 +403,11 @@ namespace InterfataUtilizator_WindowsForms
 
                 lblsMaterii[i] = new Label();
                 lblsMaterii[i].Width = LATIME_CONTROL;
-                lblsMaterii[i].Text = profesori[i].Materie.ToString();
+                lblsMaterii[i].Text = string.Join(", ", profesori[i].Materii);
                 lblsMaterii[i].Left = 3 * DIMENSIUNE_PAS_X;
                 lblsMaterii[i].Top = (i + 1) * DIMENSIUNE_PAS_Y;
                 this.Controls.Add(lblsMaterii[i]);
+
 
                 lblsPunctaj[i] = new Label();
                 lblsPunctaj[i].Width = LATIME_CONTROL;
@@ -356,58 +416,125 @@ namespace InterfataUtilizator_WindowsForms
                 lblsPunctaj[i].Top = (i + 1) * DIMENSIUNE_PAS_Y;
                 this.Controls.Add(lblsPunctaj[i]);
 
+                Button[] btnsEditare = new Button[nrProfesori];
+                    btnsEditare[i] = new Button
+                    {
+                        Text = "Editează",
+                        Width = 80,
+                        Height = 25,
+                        Left = 5 * DIMENSIUNE_PAS_X,
+                        Top = (i + 1) * DIMENSIUNE_PAS_Y,
+                        Tag = profesori[i] 
+                    };
+                    btnsEditare[i].Click += BtnEditare_Click;
+                    this.Controls.Add(btnsEditare[i]);
+
+
             }
-            
+
+        }
+
+        private void BtnEditare_Click(object sender, EventArgs e)
+        {
+            Button btnEditare = sender as Button;
+            Profesor profesorSelectat = btnEditare.Tag as Profesor;
+
+            if (profesorSelectat != null)
+            {
+                txtNume.Text = profesorSelectat.Nume;
+                txtEmail.Text = profesorSelectat.Email;
+
+                foreach (var cb in checkBoxMaterii)
+                {
+                    cb.Checked = profesorSelectat.Materii.Contains((Materie)Enum.Parse(typeof(Materie), cb.Text));
+                }
+
+                for (int i = 0; i < radioButtonsPunctaj.Length; i++)
+                {
+                    radioButtonsPunctaj[i].Checked = (i + 1) == profesorSelectat.Punctaj;
+                }
+
+                
+                btnAdaugaProfesor.Tag = profesorSelectat;
+                btnAdaugaProfesor.Text = "Salvează";
+            }
         }
 
         private void btnAdaugaProfesor_Click(object sender, EventArgs e)
         {
-            
             string nume = txtNume.Text.Trim();
             string email = txtEmail.Text.Trim();
-            int punctaj;
-
-            
-            if (!int.TryParse(txtPunctaj.Text, out punctaj) || punctaj < 1 || punctaj > 10)
+            int punctaj = GetPunctajSelectat();
+            if (punctaj == 0)
             {
-                lblEroarePunctaj.Text = "Punctajul trebuie să fie\n un numar între 1 și 10!";
-                lblEroarePunctaj.Visible = true;
+                MessageBox.Show("Te rog selectează un punctaj!");
                 return;
             }
             else
             {
                 lblEroarePunctaj.Visible = false;
             }
-
+            List<Materie> materiiSelectate = new List<Materie>();
 
             
-            Materie materieSelectata = Materie.Nimic;
-            if (cmbMaterie.SelectedItem != null)
+            foreach (var checkBox in checkBoxMaterii)
             {
-                materieSelectata = (Materie)Enum.Parse(typeof(Materie), cmbMaterie.SelectedItem.ToString());
+                
+                if (checkBox.Checked)
+                {
+                    Materie materie = (Materie)Enum.Parse(typeof(Materie), checkBox.Text);
+                    materiiSelectate.Add(materie);
+                }
             }
-            else
+
+            if (!materiiSelectate.Any())
             {
-                MessageBox.Show("Selectează o materie!");
+                MessageBox.Show("Selectați cel puțin o materie!");
                 return;
             }
 
+            Profesor profesorSelectat = btnAdaugaProfesor.Tag as Profesor;
 
-            
-            Profesor profesorNou = new Profesor(nume, email, materieSelectata, punctaj);
+            if (profesorSelectat != null)
+            {
+                
+                profesorSelectat.Nume = nume;
+                profesorSelectat.Email = email;
+                profesorSelectat.Punctaj = punctaj;
+                profesorSelectat.Materii = materiiSelectate;
 
-            
-            adminProfesori.AddProfesor(profesorNou);
+                adminProfesori.UpdateProfesor(profesorSelectat);
 
-            
+
+                MessageBox.Show("Profesorul a fost actualizat cu succes!");
+                btnAdaugaProfesor.Tag = null;
+                btnAdaugaProfesor.Text = "Adaugă Profesor";
+            }
+
+            else
+            {
+                
+                Profesor profesorNou = new Profesor(nume, email, materiiSelectate, punctaj);
+                adminProfesori.AddProfesor(profesorNou);
+            }
+            AfiseazaProfesori();
+
             Profesori_Load(this, EventArgs.Empty);
-                                                   
+
             txtNume.Text = string.Empty;
             txtEmail.Text = string.Empty;
-            txtPunctaj.Text = string.Empty;
-            cmbMaterie.SelectedIndex = -1;
-        }
 
+           
+            foreach (var cb in checkBoxMaterii)
+            {
+                cb.Checked = false;
+            }
+            foreach (var rb in radioButtonsPunctaj)
+            {
+                rb.Checked = false;
+            }
+
+        }
 
         private void BtnElevi_Click(object sender, EventArgs e)
         {
@@ -422,13 +549,10 @@ namespace InterfataUtilizator_WindowsForms
             mainForm.Show();
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void btnCautaProfesor_Click(object sender, EventArgs e)
         {
+           // Console.WriteLine("Butonul de căutare a fost apăsat.");
+
             string cautaNume = txtNume.Text.Trim(); 
 
             if (string.IsNullOrEmpty(cautaNume))
@@ -437,10 +561,21 @@ namespace InterfataUtilizator_WindowsForms
                 return;
             }
 
+            Profesor[] totiProfesorii = adminProfesori.GetProfesori(out int nrProfesori);
+
             
-            var profesoriGasiti = adminProfesori.GetProfesori(out int nrProfesori)
-                .Where(profesor => profesor.Nume.ToLower().Contains(cautaNume.ToLower()))
-                .ToArray(); 
+            List<Profesor> profesoriFiltrati = new List<Profesor>();
+            foreach (var profesor in totiProfesorii)
+            {
+                if (profesor.Nume.ToLower().Contains(cautaNume.ToLower()))
+                {
+                    profesoriFiltrati.Add(profesor);
+                }
+            }
+
+            
+            Profesor[] profesoriGasiti = profesoriFiltrati.ToArray();
+
 
             if (profesoriGasiti.Length == 0)
             {
@@ -480,7 +615,7 @@ namespace InterfataUtilizator_WindowsForms
 
                 lblsMaterii[i] = new Label();
                 lblsMaterii[i].Width = LATIME_CONTROL;
-                lblsMaterii[i].Text = profesoriGasiti[i].Materie.ToString();
+                lblsMaterii[i].Text = string.Join(", ", profesoriGasiti[i].Materii);
                 lblsMaterii[i].Left = 3 * DIMENSIUNE_PAS_X;
                 lblsMaterii[i].Top = (i + 1) * DIMENSIUNE_PAS_Y;
                 this.Controls.Add(lblsMaterii[i]);
@@ -493,15 +628,19 @@ namespace InterfataUtilizator_WindowsForms
                 this.Controls.Add(lblsPunctaj[i]);
             }
         }
-
-        private void radioButtonAdaugare_CheckedChanged(object sender, EventArgs e)
+        private int GetPunctajSelectat()
         {
 
+            for (int i = 0; i < radioButtonsPunctaj.Length; i++)
+            {
+                if (radioButtonsPunctaj[i] != null && radioButtonsPunctaj[i].Checked)
+                {
+                    return i + 1;
+                }
+            }
+
+            return 0;
         }
 
-        private void radioButtonEditare_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
     }
 }

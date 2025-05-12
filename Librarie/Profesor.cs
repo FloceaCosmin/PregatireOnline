@@ -8,19 +8,20 @@ namespace Librarie
 {
     public class Profesor : Utilizator
     {
-        public  Materie Materie { get; set; }
+        public List<Materie> Materii { get; set; }
         public int Punctaj { get; set; }
 
-        public Profesor(string nume, string email, Materie materie, int punctaj)
+        public Profesor(string nume, string email, List<Materie> materii, int punctaj)
             : base(nume, email)
         {
-             Materie = materie;
+            Materii = materii;
             Punctaj = punctaj;
         }
 
-        public  override string Info()
+        public override string Info()
         {
-            return   $"Profesor,{base.Info()},{Materie}, {Punctaj}";
+            string materiiString = string.Join(", ", Materii);
+            return $"Profesor,{base.Info()},{materiiString}, {Punctaj}";
         }
 
         public static Profesor CautaProfesor(List<Profesor> profesori, string numeProfesor)
@@ -37,9 +38,8 @@ namespace Librarie
 
         public string ScrieInFisier()
         {
-            return $"{Nume};{Email};{Materie};{Punctaj}";
+            string materiiString = string.Join("|", Materii);
+            return $"{Nume};{Email};{materiiString};{Punctaj}";
         }
-
     }
 }
-

@@ -49,6 +49,7 @@ namespace InterfataUtilizator_WindowsForms
         {
             AscundeMeniul();
             Profesori formProfesori = new Profesori();
+            formProfesori.WindowState = FormWindowState.Normal;
             formProfesori.FormClosed += (s, args) => this.Show(); 
             formProfesori.Show();
         }
