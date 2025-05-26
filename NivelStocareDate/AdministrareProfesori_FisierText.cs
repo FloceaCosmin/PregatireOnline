@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Librarie;
 
 namespace NivelStocareDate
@@ -61,28 +62,18 @@ namespace NivelStocareDate
             return profesori.ToArray();
         }
 
-        public void UpdateProfesor(Profesor profesorActualizat)
+        public void UpdateProfesor(Profesor profesorActualizat, string numeVechi, string emailVechi)
         {
-            Profesor[] profesori = GetProfesori(out int nrProfesori);
-
-            for (int i = 0; i < nrProfesori; i++)
+            int nrProfesori;
+            var profesori = GetProfesori(out nrProfesori).ToList();
+            int index = profesori.FindIndex(p => p.Nume == numeVechi && p.Email == emailVechi);
+            if (index != -1)
             {
-                if (profesori[i].Email == profesorActualizat.Email)
-                {
-                    profesori[i] = profesorActualizat;
-                    break;
-                }
-            }
-
-            
-            using (StreamWriter writer = new StreamWriter(numeFisier, false))
-            {
-                foreach (var profesor in profesori)
-                {
-                    writer.WriteLine(profesor.ScrieInFisier());
-                }
+                profesori[index] = profesorActualizat;
+                File.WriteAllLines(numeFisier, profesori.Select(p => p.ScrieInFisier()));
             }
         }
+
 
 
 

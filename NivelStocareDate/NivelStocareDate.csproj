@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="AdministrareElevi_FisierText.cs" />
     <Compile Include="AdministrareProfesori_FisierText.cs" />
+    <Compile Include="AdministrareSesiuni_FisierText.cs" />
     <Compile Include="StocareDate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -1,8 +1,5 @@
-Marcu;marcu@yahoo.com;V;12
-Ion;ion@yahoo.com;VIII;14
-Marcu;marcu@yahoo.com;V;12
-Ion;ion@yahoo.com;VIII;14
-Marcu;marcu@yahoo.com;V;12
-Ion;ion@yahoo.com;VIII;14
-Marcu;marcu@yahoo.com;V;12
-Ion;ion@yahoo.com;VIII;14
+Ion;ion@yahoo.com;X;16
+darius;darius@yahoo.com;VIII;16
+Robert;robert@yahoo.com;X;16
+Iustin;iustin@yahoo.com;I;8
+Rares;rares@yahoo.com;III;9

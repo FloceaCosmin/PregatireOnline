@@ -1,63 +1,131 @@
-﻿using System;
+﻿using InterfataUtilizator_WidowsForms;
 using Librarie;
 using NivelStocareDate;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Drawing;
 using System.IO;
-using System.Windows.Forms;
-using InterfataUtilizator_WidowsForms;
 using System.Linq;
+using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
+using RadioButton = System.Windows.Forms.RadioButton;
 
 namespace InterfataUtilizator_WindowsForms
 {
     public partial class Profesori : Form
     {
         AdministrareProfesori_FisierText adminProfesori;
+        private AdministrareElevi_FisierText adminElevi;
 
-        private TextBox txtNume;
-        private TextBox txtEmail;
-
-
-        private Label lblNumeP;
-        private Label lblEmail;
-        private Label lblMaterii;
-        private Label lblPunctaj;
         private Label lblAdminInfo;
-        private Button btnAdaugaProfesor;
-        private Label lblEroarePunctaj;
-
-
-        private Label[] lblsNumeP;
-        private Label[] lblsEmail;
-        private Label[] lblsMaterii;
-        private Label[] lblsPunctaj;
-
-        private const int LATIME_CONTROL = 150;
-        private const int DIMENSIUNE_PAS_Y = 30;
-        private const int DIMENSIUNE_PAS_X = 150;
         Administrator admin = new Administrator("Cosmin", "cosmin@yahoo.com");
 
         private Panel panelListaProfesori;
         private Panel panelAdaugareProfesor;
         private Panel panelCautareProfesor;
 
-        private CheckBox[] checkBoxMaterii;
-        private RadioButton[] radioButtonsPunctaj;
+        private DataGridView dgvProfesori;
+        private RadioButton rbCautaNume;
+        private RadioButton rbCautaMaterie;
+        private TextBox txtCautare;
+        private Button btnAfiseazaRezultate;
+        private Label lblCauta;
+        private ListView listViewElevi;
 
+        private ContextMenuStrip contextMenuProfesori;
+        private int profesorIndexSelectat = -1;
 
+        private string caleCompletaFisier1;
+        private string caleCompletaFisier2;
+        private ContextMenuStrip contextMenuElevi;
+        private int elevIndexSelectat = -1;
+
+        private Panel panelCautareElevi;
+        private RadioButton rbCautareNumeElev;
+        private RadioButton rbCautareVarstaElev;
+        private RadioButton rbCautareClasaElev;
+        private TextBox txtCautareElev;
+        private Button btnAfiseazaRezultateElevi;
 
         public Profesori()
         {
             InitializeComponent();
 
+            string numeFisier1 = ConfigurationManager.AppSettings["NumeFisier1"];
+            string locatieFisierSolutie = Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.FullName;
+            this.caleCompletaFisier1 = Path.Combine(locatieFisierSolutie, numeFisier1);
+            string numeFisier2 = ConfigurationManager.AppSettings["NumeFisier2"];
+            this.caleCompletaFisier2 = Path.Combine(locatieFisierSolutie, numeFisier2);
+            adminElevi = new AdministrareElevi_FisierText(caleCompletaFisier2);
+
+            dgvProfesori = new DataGridView
+            {
+                Location = new Point(150, 50),
+                Size = new Size(400, 350),
+                ReadOnly = true,
+                AllowUserToAddRows = false,
+                AllowUserToDeleteRows = false,
+                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+            };
+            this.Controls.Add(dgvProfesori);
+
+            dgvProfesori.EnableHeadersVisualStyles = false;
+            dgvProfesori.ColumnHeadersDefaultCellStyle.BackColor = Color.MediumSlateBlue;
+            dgvProfesori.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dgvProfesori.ColumnHeadersDefaultCellStyle.Font = new Font("Arial", 11, FontStyle.Bold);
+
+            dgvProfesori.DefaultCellStyle.BackColor = Color.White;
+            dgvProfesori.DefaultCellStyle.ForeColor = Color.Navy;
+            dgvProfesori.DefaultCellStyle.Font = new Font("Arial", 10, FontStyle.Regular);
+
+            dgvProfesori.AlternatingRowsDefaultCellStyle.BackColor = Color.Lavender;
+
+            dgvProfesori.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dgvProfesori.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            dgvProfesori.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvProfesori.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+
+            contextMenuProfesori = new ContextMenuStrip();
+            contextMenuProfesori.Items.Add("Editare", null, ContextMenu_Editare_Click);
+            contextMenuProfesori.Items.Add("Ștergere", null, ContextMenu_Stergere_Click);
+            dgvProfesori.ContextMenuStrip = contextMenuProfesori;
+
+            // Selectează rândul la click dreapta
+            dgvProfesori.MouseDown += DgvProfesori_MouseDown;
+
+            listViewElevi = new ListView
+            {
+                Location = new Point(150, 50),
+                Size = new Size(600, 350),
+                View = View.Details,
+                FullRowSelect = true,
+                GridLines = true
+            };
+            listViewElevi.Columns.Add("Nume", 150);
+            listViewElevi.Columns.Add("Email", 200);
+            listViewElevi.Columns.Add("Clasa", 80);
+            listViewElevi.Columns.Add("Vârstă", 80);
+            listViewElevi.Visible = false;
+            this.Controls.Add(listViewElevi);
+
+            contextMenuElevi = new ContextMenuStrip();
+            contextMenuElevi.Items.Add("Editare",null, ContextMenu_EditareElev_Click);
+            contextMenuElevi.Items.Add("Ștergere", null, ContextMenu_StergereElev_Click);
+
+            listViewElevi.ContextMenuStrip = contextMenuElevi;
+            listViewElevi.MouseDown += ListViewElevi_MouseDown;
+
+           
+
             Panel panelMeniu = new Panel
             {
-                Width = 100,
+                Width = 150,
                 Height = this.ClientSize.Height,
-                BackColor = Color.LightSlateGray,
+                BackColor = Color.CadetBlue,
                 Dock = DockStyle.Left,
-                Text="Meniu"
+                Text = "Meniu"
             };
             this.Controls.Add(panelMeniu);
 
@@ -82,65 +150,6 @@ namespace InterfataUtilizator_WindowsForms
             };
             this.Controls.Add(panelCautareProfesor);
 
-
-
-            Button btnMeniuAdaugare = new Button
-            {
-                Text = "Adăugare\nProfesori",
-                Width = 80,
-                Height = 40,
-                Top = 20,
-                Left = 10,
-                BackColor = Color.MediumSlateBlue,
-                ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat
-            };
-            btnMeniuAdaugare.FlatAppearance.BorderSize = 0;
-            btnMeniuAdaugare.Click += btnAdaugaProfesor_Click; 
-            panelMeniu.Controls.Add(btnMeniuAdaugare);
-
-            
-            Button btnCautaProfesor = new Button
-            {
-                Text = "Caută\nProfesor",
-                Width = 80,
-                Height = 40,
-                Top = 70,
-                Left = 10,
-                BackColor = Color.MediumSlateBlue,
-                ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat
-            };
-            btnCautaProfesor.Click += btnCautaProfesor_Click;
-
-            
-            btnCautaProfesor.FlatAppearance.BorderSize = 0;
-            panelMeniu.Controls.Add(btnCautaProfesor);
-
-            
-            Button btnElevi = new Button
-            {
-                Text = "Lista Elevi",
-                Width = 80,
-                Height = 40,
-                Top = 120,
-                Left = 10,
-                BackColor = Color.MediumSlateBlue,
-                ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat
-            };
-            btnElevi.FlatAppearance.BorderSize = 0;
-            btnElevi.Click += BtnElevi_Click;
-            panelMeniu.Controls.Add(btnElevi);
-
-
-            
-
-            string numeFisier1 = ConfigurationManager.AppSettings["NumeFisier1"];
-
-            string locatieFisierSolutie = Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.FullName;
-            string caleCompletaFisier1 = locatieFisierSolutie + "\\" + numeFisier1;
-
             adminProfesori = new AdministrareProfesori_FisierText(caleCompletaFisier1);
 
             int nrProfesori = 0;
@@ -153,218 +162,76 @@ namespace InterfataUtilizator_WindowsForms
             this.ForeColor = Color.Navy;
             this.Text = "Informatii profesori";
 
-            lblNumeP = new Label();
-            lblNumeP.Width = LATIME_CONTROL;
-            lblNumeP.Text = "Nume Profesor";
-            lblNumeP.Left = DIMENSIUNE_PAS_X;
-            lblNumeP.Top = 10;
-            lblNumeP.ForeColor = Color.White;
-            lblNumeP.BackColor = Color.DarkBlue;
-            lblNumeP.TextAlign = ContentAlignment.MiddleCenter;
-            lblNumeP.Font = new Font("Arial", 12, FontStyle.Bold);
-            lblNumeP.BorderStyle = BorderStyle.FixedSingle;
-            this.Controls.Add(lblNumeP);
+            dgvProfesori.Visible = false;
 
-            lblEmail = new Label();
-            lblEmail.Width = LATIME_CONTROL;
-            lblEmail.Text = "Email Profesor";
-            lblEmail.Left = 2* DIMENSIUNE_PAS_X;
-            lblEmail.Top = 10;
-            lblEmail.ForeColor = Color.White;
-            lblEmail.BackColor = Color.RoyalBlue;
-            lblEmail.TextAlign = ContentAlignment.MiddleCenter;
-            lblEmail.Font = new Font("Arial", 12, FontStyle.Bold);
-            lblEmail.BorderStyle = BorderStyle.FixedSingle;
-            this.Controls.Add(lblEmail);
-
-            lblMaterii = new Label();
-            lblMaterii.Width = LATIME_CONTROL;
-            lblMaterii.Text = "Materii Predate";
-            lblMaterii.Left = 3 * DIMENSIUNE_PAS_X;
-            lblMaterii.Top = 10;
-            lblMaterii.ForeColor = Color.White;
-            lblMaterii.BackColor = Color.DarkBlue;
-            lblMaterii.TextAlign = ContentAlignment.MiddleCenter;
-            lblMaterii.Font = new Font("Arial", 12, FontStyle.Bold);
-            lblMaterii.BorderStyle = BorderStyle.FixedSingle;
-            this.Controls.Add(lblMaterii);
-
-            lblPunctaj = new Label();
-            lblPunctaj.Width = LATIME_CONTROL;
-            lblPunctaj.Text = "Punctaj Profesor";
-            lblPunctaj.Left = 4 * DIMENSIUNE_PAS_X;
-            lblPunctaj.Top = 10;
-            lblPunctaj.ForeColor = Color.White;
-            lblPunctaj.BackColor = Color.RoyalBlue;
-            lblPunctaj.TextAlign = ContentAlignment.MiddleCenter;
-            lblPunctaj.Font = new Font("Arial", 12, FontStyle.Bold);
-            lblPunctaj.BorderStyle = BorderStyle.FixedSingle;
-            this.Controls.Add(lblPunctaj);
-
-            btnAdaugaProfesor = new Button();
-            btnAdaugaProfesor.Text = "Adauga Profesor";
-            btnAdaugaProfesor.Left = 6 * DIMENSIUNE_PAS_X;
-            btnAdaugaProfesor.Top = 10;
-            btnAdaugaProfesor.BackColor = Color.BlueViolet;
-            btnAdaugaProfesor.ForeColor = Color.White;
-            btnAdaugaProfesor.Width = LATIME_CONTROL;
-            btnAdaugaProfesor.Click += btnAdaugaProfesor_Click;  
-            this.Controls.Add(btnAdaugaProfesor);
-
-            
-            Label lblNumeInput = new Label
+            panelCautareElevi = new Panel
             {
-                Text = "Nume:",
-                Left = 6 * DIMENSIUNE_PAS_X,
-                Top = 60,
-                Width = LATIME_CONTROL
-            };
-            this.Controls.Add(lblNumeInput);
-
-            txtNume = new TextBox
-            {
-                Left = 6 * DIMENSIUNE_PAS_X,
-                Top = 80,
-                Width = LATIME_CONTROL
-            };
-            this.Controls.Add(txtNume);
-
-            Label lblEmailInput = new Label
-            {
-                Text = "Email:",
-                Left = 6 * DIMENSIUNE_PAS_X,
-                Top = 120,
-                Width = LATIME_CONTROL
-            };
-            this.Controls.Add(lblEmailInput);
-
-            txtEmail = new TextBox
-            {
-                Left = 6 * DIMENSIUNE_PAS_X,
-                Top = 140,
-                Width = LATIME_CONTROL
-            };
-            this.Controls.Add(txtEmail);
-
-            Label lblMaterieInput = new Label
-            {
-                Text = "Materie:",
-                Left = 6 * DIMENSIUNE_PAS_X,
-                Top = 180,
-                Width = LATIME_CONTROL
-            };
-            this.Controls.Add(lblMaterieInput);
-
-           
-            Panel panelMaterii = new Panel
-            {
-                Left = 6 * DIMENSIUNE_PAS_X,
-                Top = 200,
-                Width = LATIME_CONTROL * 2,
-                Height = 100,
-                BorderStyle = BorderStyle.FixedSingle
-            };
-            this.Controls.Add(panelMaterii);
-
-
-            List<Materie> listaMaterii = new List<Materie>();
-
-            foreach (Materie materie in Enum.GetValues(typeof(Materie)))
-            {
-                if (materie != Materie.Nimic)
-                {
-                    listaMaterii.Add(materie);
-                }
-            }
-
-            Materie[] materii = listaMaterii.ToArray();
-
-
-            checkBoxMaterii = new CheckBox[materii.Length];
-            int checkBoxWidth = LATIME_CONTROL - 20;
-            int checkBoxHeight = 25;
-            int coloanaWidth = checkBoxWidth;
-            int nrPerColoana = (materii.Length + 1) / 2;
-
-            for (int i = 0; i < materii.Length; i++)
-            {
-                checkBoxMaterii[i] = new CheckBox
-                {
-                    Text = materii[i].ToString(),
-                    Width = checkBoxWidth,
-                    Height = checkBoxHeight,
-                    Left = (i >= nrPerColoana ? coloanaWidth : 0) + 10,
-                    Top = ((i % nrPerColoana) * checkBoxHeight) + 5,
-                    Font = new Font("Arial", 9)
-                };
-                panelMaterii.Controls.Add(checkBoxMaterii[i]);
-            }
-
-            Label lblPunctajInput = new Label
-            {
-                Text = "Punctaj:",
-                Left = 6 * DIMENSIUNE_PAS_X,
-                Top = 300, 
-                Width = LATIME_CONTROL,
-            };
-            this.Controls.Add(lblPunctajInput);
-
-
-            Panel panelPunctaj = new Panel
-            {
-                Left = 6 * DIMENSIUNE_PAS_X,
-                Top = 320,
-                Width = LATIME_CONTROL * 2,
-                Height = 60,
-                BorderStyle = BorderStyle.FixedSingle
-            };
-            this.Controls.Add(panelPunctaj);
-
-            radioButtonsPunctaj = new RadioButton[5];
-            for (int i = 0; i < 5; i++)
-            {
-                radioButtonsPunctaj[i] = new RadioButton
-                {
-                    Text = (i + 1).ToString(),
-                    Left = 10 + i * 30, 
-                    Top = 20,
-                    Width = 30,
-                    Height = 20
-                };
-                panelPunctaj.Controls.Add(radioButtonsPunctaj[i]);
-            }
-
-
-            lblEroarePunctaj = new Label
-            {
-                Left = 6 * DIMENSIUNE_PAS_X,
-                Top = 370,
-                Height = 30,
-                Width = LATIME_CONTROL,
-                ForeColor = Color.Red,
-                Font = new Font("Arial", 8, FontStyle.Regular),
-                Text = "",
+                Location = new Point(200, 30),
+                Size = new Size(500, 120),
                 Visible = false
             };
-            this.Controls.Add(lblEroarePunctaj);
 
 
+            this.Controls.Add(lblCauta);
+
+            rbCautareNumeElev = new RadioButton
+            {
+                Text = "Nume",
+                Location = new Point(10, 10),
+                Width = 80,
+                Checked = true
+            };
+            panelCautareElevi.Controls.Add(rbCautareNumeElev);
+
+            rbCautareVarstaElev = new RadioButton
+            {
+                Text = "Vârstă",
+                Location = new Point(100, 10),
+                Width = 80
+            };
+            panelCautareElevi.Controls.Add(rbCautareVarstaElev);
+
+            rbCautareClasaElev = new RadioButton
+            {
+                Text = "Clasă",
+                Location = new Point(190, 10),
+                Width = 80
+            };
+            panelCautareElevi.Controls.Add(rbCautareClasaElev);
+
+            txtCautareElev = new TextBox
+            {
+                Location = new Point(10, 50),
+                Width = 200
+            };
+            panelCautareElevi.Controls.Add(txtCautareElev);
+
+            btnAfiseazaRezultateElevi = new Button
+            {
+                Text = "Caută elevi",
+                Location = new Point(230, 48),
+                Width = 120
+            };
+            btnAfiseazaRezultateElevi.Click += BtnAfiseazaRezultateElevi_Click;
+            panelCautareElevi.Controls.Add(btnAfiseazaRezultateElevi);
+
+            this.Controls.Add(panelCautareElevi);
         }
 
         private void Profesori_Load(object sender, EventArgs e)
         {
             AfiseazaProfesori();
             AdaugaInfoAdministrator(admin);
-
+            if (listViewElevi != null) listViewElevi.Visible = false;
+            panelCautareElevi.Visible = false;
         }
 
         private void AdaugaInfoAdministrator(Administrator admin)
         {
-
             lblAdminInfo = new Label
             {
                 Text = admin.Info(),
-                Left = this.ClientSize.Width-300,
+                Left = this.ClientSize.Width - 300,
                 Top = this.ClientSize.Height - 50,
                 Width = 280,
                 TextAlign = ContentAlignment.MiddleCenter,
@@ -377,171 +244,66 @@ namespace InterfataUtilizator_WindowsForms
 
         private void AfiseazaProfesori()
         {
+            AscundeFormularCautare();
+            panelCautareElevi.Visible = false;
+            if (listViewElevi != null) listViewElevi.Visible = false;
             Profesor[] profesori = adminProfesori.GetProfesori(out int nrProfesori);
-            
 
-            lblsNumeP = new Label[nrProfesori];
-            lblsMaterii = new Label[nrProfesori];
-            lblsPunctaj = new Label[nrProfesori];
-            lblsEmail = new Label[nrProfesori];
-
-            for (int i = 0; i < nrProfesori; i++)
+            var listaAfisare = profesori.Select(p => new
             {
-                lblsNumeP[i] = new Label();
-                lblsNumeP[i].Width = LATIME_CONTROL;
-                lblsNumeP[i].Text = profesori[i].Nume;
-                lblsNumeP[i].Left = DIMENSIUNE_PAS_X;
-                lblsNumeP[i].Top = (i + 1) * DIMENSIUNE_PAS_Y;
-                this.Controls.Add(lblsNumeP[i]);
+                Nume = p.Nume,
+                Email = p.Email,
+                Materii = string.Join(", ", p.Materii),
+                Punctaj = p.Punctaj
+            }).ToList();
 
-                lblsEmail[i] = new Label();
-                lblsEmail[i].Width = LATIME_CONTROL;
-                lblsEmail[i].Text = profesori[i].Email;
-                lblsEmail[i].Left =2 * DIMENSIUNE_PAS_X;
-                lblsEmail[i].Top = (i + 1) * DIMENSIUNE_PAS_Y;
-                this.Controls.Add(lblsEmail[i]);
+            dgvProfesori.DataSource = null;
+            dgvProfesori.DataSource = listaAfisare;
 
-                lblsMaterii[i] = new Label();
-                lblsMaterii[i].Width = LATIME_CONTROL;
-                lblsMaterii[i].Text = string.Join(", ", profesori[i].Materii);
-                lblsMaterii[i].Left = 3 * DIMENSIUNE_PAS_X;
-                lblsMaterii[i].Top = (i + 1) * DIMENSIUNE_PAS_Y;
-                this.Controls.Add(lblsMaterii[i]);
+            dgvProfesori.AutoResizeColumns();
+            dgvProfesori.AutoResizeRows();
 
+            int totalWidth = dgvProfesori.RowHeadersWidth;
+            foreach (DataGridViewColumn col in dgvProfesori.Columns)
+                totalWidth += col.Width;
 
-                lblsPunctaj[i] = new Label();
-                lblsPunctaj[i].Width = LATIME_CONTROL;
-                lblsPunctaj[i].Text = profesori[i].Punctaj.ToString();
-                lblsPunctaj[i].Left = 4 * DIMENSIUNE_PAS_X;
-                lblsPunctaj[i].Top = (i + 1) * DIMENSIUNE_PAS_Y;
-                this.Controls.Add(lblsPunctaj[i]);
+            int totalHeight = dgvProfesori.ColumnHeadersHeight;
+            foreach (DataGridViewRow row in dgvProfesori.Rows)
+                totalHeight += row.Height;
 
-                Button[] btnsEditare = new Button[nrProfesori];
-                    btnsEditare[i] = new Button
-                    {
-                        Text = "Editează",
-                        Width = 80,
-                        Height = 25,
-                        Left = 5 * DIMENSIUNE_PAS_X,
-                        Top = (i + 1) * DIMENSIUNE_PAS_Y,
-                        Tag = profesori[i] 
-                    };
-                    btnsEditare[i].Click += BtnEditare_Click;
-                    this.Controls.Add(btnsEditare[i]);
-
-
-            }
-
+            int maxWidth = this.ClientSize.Width - dgvProfesori.Left - 20;
+            int maxHeight = this.ClientSize.Height - dgvProfesori.Top - 20;
+            dgvProfesori.Width = Math.Min(totalWidth + 2, maxWidth);
+            dgvProfesori.Height = Math.Min(totalHeight + 2, maxHeight);
         }
 
-        private void BtnEditare_Click(object sender, EventArgs e)
+        private void AfiseazaElevi()
         {
-            Button btnEditare = sender as Button;
-            Profesor profesorSelectat = btnEditare.Tag as Profesor;
+            int nrElevi;
+            Elev[] elevi = adminElevi.GetElevi(out nrElevi);
+            AscundeFormularCautare();
+            panelCautareElevi.Visible = false;
 
-            if (profesorSelectat != null)
+            listViewElevi.Items.Clear();
+            foreach (var e in elevi)
             {
-                txtNume.Text = profesorSelectat.Nume;
-                txtEmail.Text = profesorSelectat.Email;
-
-                foreach (var cb in checkBoxMaterii)
-                {
-                    cb.Checked = profesorSelectat.Materii.Contains((Materie)Enum.Parse(typeof(Materie), cb.Text));
-                }
-
-                for (int i = 0; i < radioButtonsPunctaj.Length; i++)
-                {
-                    radioButtonsPunctaj[i].Checked = (i + 1) == profesorSelectat.Punctaj;
-                }
-
-                
-                btnAdaugaProfesor.Tag = profesorSelectat;
-                btnAdaugaProfesor.Text = "Salvează";
+                var item = new ListViewItem(e.Nume);
+                item.SubItems.Add(e.Email);
+                item.SubItems.Add(e.Clasa.ToString());
+                item.SubItems.Add(e.Varsta.ToString());
+                listViewElevi.Items.Add(item);
             }
+            listViewElevi.Visible = true;
+            dgvProfesori.Visible = false;
         }
 
-        private void btnAdaugaProfesor_Click(object sender, EventArgs e)
+        private void btnlistaElevi_Click(object sender, EventArgs e)
         {
-            string nume = txtNume.Text.Trim();
-            string email = txtEmail.Text.Trim();
-            int punctaj = GetPunctajSelectat();
-            if (punctaj == 0)
-            {
-                MessageBox.Show("Te rog selectează un punctaj!");
-                return;
-            }
-            else
-            {
-                lblEroarePunctaj.Visible = false;
-            }
-            List<Materie> materiiSelectate = new List<Materie>();
-
-            
-            foreach (var checkBox in checkBoxMaterii)
-            {
-                
-                if (checkBox.Checked)
-                {
-                    Materie materie = (Materie)Enum.Parse(typeof(Materie), checkBox.Text);
-                    materiiSelectate.Add(materie);
-                }
-            }
-
-            if (!materiiSelectate.Any())
-            {
-                MessageBox.Show("Selectați cel puțin o materie!");
-                return;
-            }
-
-            Profesor profesorSelectat = btnAdaugaProfesor.Tag as Profesor;
-
-            if (profesorSelectat != null)
-            {
-                
-                profesorSelectat.Nume = nume;
-                profesorSelectat.Email = email;
-                profesorSelectat.Punctaj = punctaj;
-                profesorSelectat.Materii = materiiSelectate;
-
-                adminProfesori.UpdateProfesor(profesorSelectat);
-
-
-                MessageBox.Show("Profesorul a fost actualizat cu succes!");
-                btnAdaugaProfesor.Tag = null;
-                btnAdaugaProfesor.Text = "Adaugă Profesor";
-            }
-
-            else
-            {
-                
-                Profesor profesorNou = new Profesor(nume, email, materiiSelectate, punctaj);
-                adminProfesori.AddProfesor(profesorNou);
-            }
-            AfiseazaProfesori();
-
-            Profesori_Load(this, EventArgs.Empty);
-
-            txtNume.Text = string.Empty;
-            txtEmail.Text = string.Empty;
-
-           
-            foreach (var cb in checkBoxMaterii)
-            {
-                cb.Checked = false;
-            }
-            foreach (var rb in radioButtonsPunctaj)
-            {
-                rb.Checked = false;
-            }
-
+            AscundeFormularCautare();
+            dgvProfesori.Visible = false;
+            AfiseazaElevi();
+            panelCautareElevi.Visible = false;
         }
-
-        private void BtnElevi_Click(object sender, EventArgs e)
-        {
-            Elevi frmElevi = new Elevi();
-            frmElevi.Show(); 
-        }
-
         private void btnBack_Click(object sender, EventArgs e)
         {
             this.Hide();
@@ -549,98 +311,363 @@ namespace InterfataUtilizator_WindowsForms
             mainForm.Show();
         }
 
-        private void btnCautaProfesor_Click(object sender, EventArgs e)
+        private void btnListaProfesori_Click(object sender, EventArgs e)
         {
-           // Console.WriteLine("Butonul de căutare a fost apăsat.");
+            dgvProfesori.Visible = true;
+            AfiseazaProfesori();
+            AscundeFormularCautare();
+            panelCautareElevi.Visible = false;
+        }
 
-            string cautaNume = txtNume.Text.Trim(); 
+        private void btnaddProf_Click(object sender, EventArgs e)
+        {
+            if (listViewElevi != null) listViewElevi.Visible = false;
+            AscundeFormularCautare();
+            panelCautareElevi.Visible = false;
 
-            if (string.IsNullOrEmpty(cautaNume))
+            var frm = new AdaugareProfesorForm(adminProfesori, null);
+            if (frm.ShowDialog() == DialogResult.OK)
             {
-                MessageBox.Show("Introduceți un nume de profesor pentru căutare.");
-                return;
+                AfiseazaProfesori();
             }
+        }
+
+        private void btncautare_Click(object sender, EventArgs e)
+        {
+            if (listViewElevi != null) listViewElevi.Visible = false;
+            dgvProfesori.Visible = false;
+            panelCautareElevi.Visible = false;
+
+
+            if (rbCautaNume == null)
+            {
+                lblCauta = new Label
+                {
+                    Text = "Caută după:",
+                    Left = 350,
+                    Top = 60,
+                    Width = 100
+                };
+                this.Controls.Add(lblCauta);
+
+                rbCautaMaterie = new RadioButton
+                {
+                    Text = "Materie",
+                    Left = 350,
+                    Top = lblCauta.Bottom + 5,
+                    Width = 80,
+                    Checked = true
+                };
+                this.Controls.Add(rbCautaMaterie);
+
+                rbCautaNume = new RadioButton
+                {
+                    Text = "Nume",
+                    Left = rbCautaMaterie.Right + 20,
+                    Top = lblCauta.Bottom + 5,
+                    Width = 80
+                };
+                this.Controls.Add(rbCautaNume);
+
+                txtCautare = new TextBox
+                {
+                    Left = 350,
+                    Top = rbCautaMaterie.Bottom + 10,
+                    Width = 200
+                };
+                this.Controls.Add(txtCautare);
+
+                btnAfiseazaRezultate = new Button
+                {
+                    Text = "Afișează profesori",
+                    Left = txtCautare.Right + 20,
+                    Top = txtCautare.Top,
+                    Width = 140
+                };
+                btnAfiseazaRezultate.Click += BtnAfiseazaRezultate_Click;
+                this.Controls.Add(btnAfiseazaRezultate);
+            }
+            else
+            {
+                lblCauta.Visible = true;
+                rbCautaMaterie.Visible = true;
+                rbCautaNume.Visible = true;
+                txtCautare.Visible = true;
+                btnAfiseazaRezultate.Visible = true;
+            }
+
+            int dgvTop = btnAfiseazaRezultate.Bottom + 20;
+            dgvProfesori.Left = 200;
+            dgvProfesori.Top = dgvTop;
+            dgvProfesori.Width = 700;
+            dgvProfesori.Height = this.ClientSize.Height - dgvTop - 40;
+        }
+
+        private void BtnAfiseazaRezultate_Click(object sender, EventArgs e)
+        {
+            if (listViewElevi != null) listViewElevi.Visible = false;
+            string criteriu = txtCautare.Text.Trim();
 
             Profesor[] totiProfesorii = adminProfesori.GetProfesori(out int nrProfesori);
+            List<Profesor> profesoriGasiti = new List<Profesor>();
 
-            
-            List<Profesor> profesoriFiltrati = new List<Profesor>();
-            foreach (var profesor in totiProfesorii)
+            if (rbCautaMaterie.Checked)
             {
-                if (profesor.Nume.ToLower().Contains(cautaNume.ToLower()))
+                foreach (var profesor in totiProfesorii)
                 {
-                    profesoriFiltrati.Add(profesor);
+                    if (profesor.Materii.Any(m => m.ToString().ToLower().Contains(criteriu.ToLower())))
+                    {
+                        profesoriGasiti.Add(profesor);
+                    }
+                }
+            }
+            else
+            {
+                foreach (var profesor in totiProfesorii)
+                {
+                    if (profesor.Nume.ToLower().Contains(criteriu.ToLower()))
+                    {
+                        profesoriGasiti.Add(profesor);
+                    }
                 }
             }
 
-            
-            Profesor[] profesoriGasiti = profesoriFiltrati.ToArray();
-
-
-            if (profesoriGasiti.Length == 0)
+            if (profesoriGasiti.Count == 0)
             {
-                MessageBox.Show("Nu s-a găsit niciun profesor cu acest nume.");
+                MessageBox.Show("Nu s-a găsit niciun profesor cu acest criteriu.");
                 return;
             }
 
-            foreach (var lbl in lblsNumeP)
-                this.Controls.Remove(lbl);
-            foreach (var lbl in lblsEmail)
-                this.Controls.Remove(lbl);
-            foreach (var lbl in lblsMaterii)
-                this.Controls.Remove(lbl);
-            foreach (var lbl in lblsPunctaj)
-                this.Controls.Remove(lbl);
-
-            lblsNumeP = new Label[profesoriGasiti.Length];
-            lblsEmail = new Label[profesoriGasiti.Length];
-            lblsMaterii = new Label[profesoriGasiti.Length];
-            lblsPunctaj = new Label[profesoriGasiti.Length];
-
-            for (int i = 0; i < profesoriGasiti.Length; i++)
+            // Afișează rezultatele în DataGridView
+            dgvProfesori.Visible = true;
+            dgvProfesori.DataSource = profesoriGasiti.Select(p => new
             {
-                lblsNumeP[i] = new Label();
-                lblsNumeP[i].Width = LATIME_CONTROL;
-                lblsNumeP[i].Text = profesoriGasiti[i].Nume;
-                lblsNumeP[i].Left = DIMENSIUNE_PAS_X;
-                lblsNumeP[i].Top = (i + 1) * DIMENSIUNE_PAS_Y;
-                this.Controls.Add(lblsNumeP[i]);
+                Nume = p.Nume,
+                Email = p.Email,
+                Materii = string.Join(", ", p.Materii),
+                Punctaj = p.Punctaj
+            }).ToList();
 
-                lblsEmail[i] = new Label();
-                lblsEmail[i].Width = LATIME_CONTROL;
-                lblsEmail[i].Text = profesoriGasiti[i].Email;
-                lblsEmail[i].Left = 2 * DIMENSIUNE_PAS_X;
-                lblsEmail[i].Top = (i + 1) * DIMENSIUNE_PAS_Y;
-                this.Controls.Add(lblsEmail[i]);
+            // Elimină border și header de rânduri
+            dgvProfesori.BorderStyle = BorderStyle.None;
+            dgvProfesori.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            dgvProfesori.RowHeadersVisible = false;
 
-                lblsMaterii[i] = new Label();
-                lblsMaterii[i].Width = LATIME_CONTROL;
-                lblsMaterii[i].Text = string.Join(", ", profesoriGasiti[i].Materii);
-                lblsMaterii[i].Left = 3 * DIMENSIUNE_PAS_X;
-                lblsMaterii[i].Top = (i + 1) * DIMENSIUNE_PAS_Y;
-                this.Controls.Add(lblsMaterii[i]);
+            // Redimensionează coloanele la conținut
+            dgvProfesori.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dgvProfesori.AutoResizeColumns();
+            dgvProfesori.AutoResizeRows();
 
-                lblsPunctaj[i] = new Label();
-                lblsPunctaj[i].Width = LATIME_CONTROL;
-                lblsPunctaj[i].Text = profesoriGasiti[i].Punctaj.ToString();
-                lblsPunctaj[i].Left = 4 * DIMENSIUNE_PAS_X;
-                lblsPunctaj[i].Top = (i + 1) * DIMENSIUNE_PAS_Y;
-                this.Controls.Add(lblsPunctaj[i]);
-            }
+            // Oprește auto-size ca să poți calcula lățimea exactă
+            dgvProfesori.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+
+            // Calculează lățimea totală
+            int totalWidth = 0;
+            foreach (DataGridViewColumn col in dgvProfesori.Columns)
+                totalWidth += col.Width;
+            dgvProfesori.Width = totalWidth + 2; // +2 pentru a evita scroll bar-ul vertical
+
+            // Calculează înălțimea totală
+            int totalHeight = dgvProfesori.ColumnHeadersHeight;
+            foreach (DataGridViewRow row in dgvProfesori.Rows)
+                totalHeight += row.Height;
+            dgvProfesori.Height = totalHeight + 2;
+
+            // Centrează DataGridView-ul
+            dgvProfesori.Left = (this.ClientSize.Width - dgvProfesori.Width) / 2;
+            dgvProfesori.Top = btnAfiseazaRezultate.Bottom + 20;
         }
-        private int GetPunctajSelectat()
-        {
 
-            for (int i = 0; i < radioButtonsPunctaj.Length; i++)
+        private void DgvProfesori_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
             {
-                if (radioButtonsPunctaj[i] != null && radioButtonsPunctaj[i].Checked)
+                var hit = dgvProfesori.HitTest(e.X, e.Y);
+                if (hit.RowIndex >= 0)
                 {
-                    return i + 1;
+                    dgvProfesori.ClearSelection();
+                    dgvProfesori.Rows[hit.RowIndex].Selected = true;
+                    profesorIndexSelectat = hit.RowIndex;
+                }
+                else
+                {
+                    profesorIndexSelectat = -1;
                 }
             }
-
-            return 0;
         }
 
+
+        private void ListViewElevi_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                var item = listViewElevi.GetItemAt(e.X, e.Y);
+                if (item != null)
+                {
+                    item.Selected = true;
+                    elevIndexSelectat = item.Index;
+                }
+                else
+                {
+                    listViewElevi.SelectedItems.Clear();
+                    elevIndexSelectat = -1;
+                }
+            }
+        }
+
+
+        private void ContextMenu_Editare_Click(object sender, EventArgs e)
+        {
+            if (profesorIndexSelectat < 0) return;
+
+            var profesori = adminProfesori.GetProfesori(out int nrProfesori);
+            if (profesorIndexSelectat >= profesori.Length) return;
+            var profesor = profesori[profesorIndexSelectat];
+
+            var frm = new AdaugareProfesorForm(adminProfesori, profesor);
+            if (frm.ShowDialog() == DialogResult.OK)
+            {
+                AfiseazaProfesori();
+            }
+        }
+
+        private void ContextMenu_Stergere_Click(object sender, EventArgs e)
+        {
+            if (profesorIndexSelectat < 0) return;
+
+            var profesori = adminProfesori.GetProfesori(out int nrProfesori);
+            if (profesorIndexSelectat >= profesori.Length) return;
+            var profesor = profesori[profesorIndexSelectat];
+
+            var confirm = MessageBox.Show($"Sigur vrei să ștergi profesorul {profesor.Nume}?", "Confirmare ștergere", MessageBoxButtons.YesNo);
+            if (confirm == DialogResult.Yes)
+            {
+                var lista = profesori.ToList();
+                lista.RemoveAt(profesorIndexSelectat);
+                File.WriteAllLines(caleCompletaFisier1, lista.Select(p => p.ScrieInFisier()));
+                AfiseazaProfesori();
+                dgvProfesori.Visible = true;
+            }
+        }
+
+        private void AscundeFormularCautare()
+        {
+            if (lblCauta != null) lblCauta.Visible = false;
+            if (rbCautaMaterie != null) rbCautaMaterie.Visible = false;
+            if (rbCautaNume != null) rbCautaNume.Visible = false;
+            if (txtCautare != null) txtCautare.Visible = false;
+            if (btnAfiseazaRezultate != null) btnAfiseazaRezultate.Visible = false;
+        }
+
+        private void ContextMenu_StergereElev_Click(object sender, EventArgs e)
+        {
+            if (elevIndexSelectat < 0) return;
+
+            int nrElevi;
+            var elevi = adminElevi.GetElevi(out nrElevi);
+            if (elevIndexSelectat >= elevi.Length) return;
+            var elev = elevi[elevIndexSelectat];
+
+            var confirm = MessageBox.Show($"Sigur vrei să ștergi elevul {elev.Nume}?", "Confirmare ștergere", MessageBoxButtons.YesNo);
+            if (confirm == DialogResult.Yes)
+            {
+                var lista = elevi.ToList();
+                lista.RemoveAt(elevIndexSelectat);
+                File.WriteAllLines(caleCompletaFisier2, lista.Select(el => el.ScrieInFisier()));
+                AfiseazaElevi();
+                listViewElevi.Visible = true;
+
+
+            }
+        }
+
+        private void buttonAddelevi_Click(object sender, EventArgs e)
+        {
+            var frm = new AdaugareElevForm(adminElevi, null);
+            AscundeFormularCautare();
+            panelCautareElevi.Visible = false;
+            if (frm.ShowDialog() == DialogResult.OK)
+            {
+                AfiseazaElevi();
+            }
+
+        }
+        private void ContextMenu_EditareElev_Click(object sender, EventArgs e)
+        {
+            if (elevIndexSelectat < 0) return;
+
+            int nrElevi;
+            var elevi = adminElevi.GetElevi(out nrElevi);
+            if (elevIndexSelectat >= elevi.Length) return;
+            var elev = elevi[elevIndexSelectat];
+
+            var frm = new AdaugareElevForm(adminElevi, elev);
+            if (frm.ShowDialog() == DialogResult.OK)
+            {
+                AfiseazaElevi();
+            }
+        }
+
+        private void BtnAfiseazaRezultateElevi_Click(object sender, EventArgs e)
+        {
+            string criteriu = txtCautareElev.Text.Trim();
+            AscundeFormularCautare();
+            panelCautareElevi.Visible = false;
+            if (string.IsNullOrEmpty(criteriu))
+            {
+                MessageBox.Show("Introduceți un criteriu de căutare!");
+                return;
+            }
+
+            int nrElevi;
+            Elev[] elevi = adminElevi.GetElevi(out nrElevi);
+            List<Elev> eleviGasiti = new List<Elev>();
+
+            if (rbCautareNumeElev.Checked)
+            {
+                eleviGasiti = elevi.Where(el => el.Nume.IndexOf(criteriu, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+            }
+            else if (rbCautareVarstaElev.Checked)
+            {
+                if (int.TryParse(criteriu, out int varstaCautata))
+                    eleviGasiti = elevi.Where(el => el.Varsta == varstaCautata).ToList();
+                else
+                {
+                    MessageBox.Show("Introduceți o vârstă validă!");
+                    return;
+                }
+            }
+            else if (rbCautareClasaElev.Checked)
+            {
+                eleviGasiti = elevi.Where(el => el.Clasa.ToString().Equals(criteriu, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+            if (eleviGasiti.Count == 0)
+            {
+                MessageBox.Show("Nu s-a găsit niciun elev cu acest criteriu.");
+                return;
+            }
+
+            // Afișează rezultatele în ListView
+            listViewElevi.Items.Clear();
+            foreach (var el in eleviGasiti)
+            {
+                var item = new ListViewItem(el.Nume);
+                item.SubItems.Add(el.Email);
+                item.SubItems.Add(el.Clasa.ToString());
+                item.SubItems.Add(el.Varsta.ToString());
+                listViewElevi.Items.Add(item);
+            }
+            listViewElevi.Visible = true;
+            dgvProfesori.Visible = false;
+            panelCautareElevi.Visible = false;
+        }
+
+        private void buttonCautareElevi_Click(object sender, EventArgs e)
+        {
+            dgvProfesori.Visible = false;
+            if (listViewElevi != null) listViewElevi.Visible = false;
+            panelCautareElevi.Visible = true;
+            AscundeFormularCautare();
+        }
     }
 }

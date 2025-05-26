@@ -1,6 +1,5 @@
-Matei;matei@yahoo.com;Biologie|Chimie;5
+MateiSebastian;matei@yahoo.com;Romana;5
 Cosmin;cosmin@yahoo.com;Informatica;5
-mihaela;alexandra;Matematica;5
-Mihai;maihi@yahoo.com;Romana;4
+Mihai;maihi@yahoo.com;Romana|Matematica;4
 Sebastian;sebi@yahoo.com;Informatica;3
-Matei;matei@gmail.com;Biologie;4
+Matei;matei@gmail.com;Biologie|Matematica;4

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Librarie;
+using System.Linq;
 
 namespace NivelStocareDate
 {
@@ -26,6 +27,17 @@ namespace NivelStocareDate
             }
         }
 
+        public void UpdateElevi(Elev elevActualizat, string numeVechi, string emailVechi)
+        {
+            int nrElevi;
+            var elevi = GetElevi(out nrElevi).ToList();
+            int index = elevi.FindIndex(el => el.Nume == numeVechi && el.Email == emailVechi);
+            if (index != -1)
+            {
+               elevi[index] = elevActualizat;
+                File.WriteAllLines(numeFisier, elevi.Select(p => p.ScrieInFisier()));
+            }
+        }
         public Elev[] GetElevi(out int nrElevi)
         {
             List<Elev> elevi = new List<Elev>();

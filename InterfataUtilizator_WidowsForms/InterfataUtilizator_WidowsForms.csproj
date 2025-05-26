@@ -47,11 +47,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Elevi.cs">
+    <Compile Include="AdaugareElevForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Elevi.Designer.cs">
-      <DependentUpon>Elevi.cs</DependentUpon>
+    <Compile Include="AdaugareElevForm.Designer.cs">
+      <DependentUpon>AdaugareElevForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AdaugareProfesorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AdaugareProfesorForm.Designer.cs">
+      <DependentUpon>AdaugareProfesorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AdaugareSesiune.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AdaugareSesiune.Designer.cs">
+      <DependentUpon>AdaugareSesiune.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Sesiuni.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Sesiuni.Designer.cs">
+      <DependentUpon>Sesiuni.cs</DependentUpon>
     </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -67,8 +85,17 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Elevi.resx">
-      <DependentUpon>Elevi.cs</DependentUpon>
+    <EmbeddedResource Include="AdaugareElevForm.resx">
+      <DependentUpon>AdaugareElevForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AdaugareProfesorForm.resx">
+      <DependentUpon>AdaugareProfesorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AdaugareSesiune.resx">
+      <DependentUpon>AdaugareSesiune.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sesiuni.resx">
+      <DependentUpon>Sesiuni.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
