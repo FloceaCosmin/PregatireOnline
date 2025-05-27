@@ -10,7 +10,6 @@ namespace Librarie
     {
         public string Nume { get; set; }
         public string Email { get; set; }
-        public string TipUtilizator { get; set; }
 
         public Utilizator(string nume, string email)
         {

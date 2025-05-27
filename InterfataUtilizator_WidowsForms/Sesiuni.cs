@@ -50,7 +50,7 @@ namespace InterfataUtilizator_WindowsForms
 
         private void Sesiuni_Load(object sender, EventArgs e)
         {
-
+            this.Text = "Sesiuni";
         }
         private void AdaugaInfoAdministrator(Administrator admin)
         {
@@ -92,11 +92,9 @@ namespace InterfataUtilizator_WindowsForms
             if (listViewSesiuni != null)
                 listViewSesiuni.Visible = false;
 
-            // Creează și afișează formularul de adăugare sesiune
             var frmAdaugareSesiune = new AdaugareSesiune(adminSesiuni);
             if (frmAdaugareSesiune.ShowDialog() == DialogResult.OK)
             {
-                // Reîmprospătează lista de sesiuni după adăugare
                 if (listViewSesiuni != null && listViewSesiuni.Visible)
                     btnListSes_Click(sender, e);
             }

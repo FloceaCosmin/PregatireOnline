@@ -253,7 +253,7 @@ namespace PregatiriOnline
             Console.Write("Introduceti numele profesorului pe care doriti sa il cautati: ");
             string numeProfesor = Console.ReadLine();
 
-            Profesor profesorGasit = Profesor.CautaProfesor(stocare.Profesori, numeProfesor);
+            Profesor profesorGasit = Profesor.CautaProfesorNume(stocare.Profesori, numeProfesor);
 
             if (profesorGasit != null)
             {

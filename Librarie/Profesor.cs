@@ -18,13 +18,23 @@ namespace Librarie
             Punctaj = punctaj;
         }
 
+        public static List<Profesor> CautaProfesoriDupaNume(List<Profesor> profesori, string numeProfesor)
+        {
+            return profesori.Where(p => p.Nume.ToLower().Contains(numeProfesor.ToLower())).ToList();
+        }
+
+        public static List<Profesor> CautaProfesoriDupaMaterie(List<Profesor> profesori, string materie)
+        {
+            return profesori.Where(p => p.Materii.Any(m => m.ToString().ToLower().Contains(materie.ToLower()))).ToList();
+        }
+
         public override string Info()
         {
             string materiiString = string.Join(", ", Materii);
             return $"Profesor,{base.Info()},{materiiString}, {Punctaj}";
         }
 
-        public static Profesor CautaProfesor(List<Profesor> profesori, string numeProfesor)
+        public static Profesor CautaProfesorNume(List<Profesor> profesori, string numeProfesor)
         {
             foreach (var profesor in profesori)
             {

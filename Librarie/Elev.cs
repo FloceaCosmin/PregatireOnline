@@ -26,6 +26,21 @@ namespace Librarie
             return $"Elev,{base.Info()},{Clasa},{Varsta}";
         }
 
+        public static List<Elev> CautaEleviDupaNume(List<Elev> elevi, string numeElev)
+        {
+            return elevi.Where(e => e.Nume.ToLower().Contains(numeElev.ToLower())).ToList();
+        }
+
+        public static List<Elev> CautaEleviDupaVarsta(List<Elev> elevi, int varsta)
+        {
+            return elevi.Where(e => e.Varsta == varsta).ToList();
+        }
+
+        public static List<Elev> CautaEleviDupaClasa(List<Elev> elevi, string clasa)
+        {
+            return elevi.Where(e => e.Clasa.ToString().Equals(clasa, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
         public static Elev CautaElev(List<Elev> elevi, string numeElev)
         {
             foreach (var elev in elevi)

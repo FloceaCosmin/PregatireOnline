@@ -92,7 +92,6 @@ namespace InterfataUtilizator_WindowsForms
             contextMenuProfesori.Items.Add("Ștergere", null, ContextMenu_Stergere_Click);
             dgvProfesori.ContextMenuStrip = contextMenuProfesori;
 
-            // Selectează rândul la click dreapta
             dgvProfesori.MouseDown += DgvProfesori_MouseDown;
 
             listViewElevi = new ListView
@@ -103,7 +102,7 @@ namespace InterfataUtilizator_WindowsForms
                 FullRowSelect = true,
                 GridLines = true
             };
-            listViewElevi.Columns.Add("Nume", 150);
+            listViewElevi.Columns.Add("Nume Elevi", 150);
             listViewElevi.Columns.Add("Email", 200);
             listViewElevi.Columns.Add("Clasa", 80);
             listViewElevi.Columns.Add("Vârstă", 80);
@@ -176,7 +175,7 @@ namespace InterfataUtilizator_WindowsForms
 
             rbCautareNumeElev = new RadioButton
             {
-                Text = "Nume",
+                Text = "Nume Elevi",
                 Location = new Point(10, 10),
                 Width = 80,
                 Checked = true
@@ -208,8 +207,8 @@ namespace InterfataUtilizator_WindowsForms
 
             btnAfiseazaRezultateElevi = new Button
             {
-                Text = "Caută elevi",
-                Location = new Point(230, 48),
+                Text = "Caută elevi:",
+                Location = new Point(350, 60),
                 Width = 120
             };
             btnAfiseazaRezultateElevi.Click += BtnAfiseazaRezultateElevi_Click;
@@ -343,10 +342,10 @@ namespace InterfataUtilizator_WindowsForms
             {
                 lblCauta = new Label
                 {
-                    Text = "Caută după:",
+                    Text = "Caută profesor după:",
                     Left = 350,
                     Top = 60,
-                    Width = 100
+                    Width = 300
                 };
                 this.Controls.Add(lblCauta);
 
@@ -408,28 +407,22 @@ namespace InterfataUtilizator_WindowsForms
             if (listViewElevi != null) listViewElevi.Visible = false;
             string criteriu = txtCautare.Text.Trim();
 
+            if (string.IsNullOrEmpty(criteriu))
+            {
+                MessageBox.Show("Introduceți un criteriu de căutare!");
+                return;
+            }
+
             Profesor[] totiProfesorii = adminProfesori.GetProfesori(out int nrProfesori);
-            List<Profesor> profesoriGasiti = new List<Profesor>();
+            List<Profesor> profesoriGasiti;
 
             if (rbCautaMaterie.Checked)
             {
-                foreach (var profesor in totiProfesorii)
-                {
-                    if (profesor.Materii.Any(m => m.ToString().ToLower().Contains(criteriu.ToLower())))
-                    {
-                        profesoriGasiti.Add(profesor);
-                    }
-                }
+                profesoriGasiti = Profesor.CautaProfesoriDupaMaterie(totiProfesorii.ToList(), criteriu);
             }
-            else
+            else 
             {
-                foreach (var profesor in totiProfesorii)
-                {
-                    if (profesor.Nume.ToLower().Contains(criteriu.ToLower()))
-                    {
-                        profesoriGasiti.Add(profesor);
-                    }
-                }
+                profesoriGasiti = Profesor.CautaProfesoriDupaNume(totiProfesorii.ToList(), criteriu);
             }
 
             if (profesoriGasiti.Count == 0)
@@ -438,7 +431,7 @@ namespace InterfataUtilizator_WindowsForms
                 return;
             }
 
-            // Afișează rezultatele în DataGridView
+            
             dgvProfesori.Visible = true;
             dgvProfesori.DataSource = profesoriGasiti.Select(p => new
             {
@@ -448,32 +441,20 @@ namespace InterfataUtilizator_WindowsForms
                 Punctaj = p.Punctaj
             }).ToList();
 
-            // Elimină border și header de rânduri
+            
             dgvProfesori.BorderStyle = BorderStyle.None;
             dgvProfesori.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
             dgvProfesori.RowHeadersVisible = false;
-
-            // Redimensionează coloanele la conținut
             dgvProfesori.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dgvProfesori.AutoResizeColumns();
             dgvProfesori.AutoResizeRows();
 
-            // Oprește auto-size ca să poți calcula lățimea exactă
-            dgvProfesori.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+            int totalWidth = dgvProfesori.Columns.Cast<DataGridViewColumn>().Sum(col => col.Width) + 2;
+            int totalHeight = dgvProfesori.Rows.Cast<DataGridViewRow>().Sum(row => row.Height) +
+                             dgvProfesori.ColumnHeadersHeight + 2;
 
-            // Calculează lățimea totală
-            int totalWidth = 0;
-            foreach (DataGridViewColumn col in dgvProfesori.Columns)
-                totalWidth += col.Width;
-            dgvProfesori.Width = totalWidth + 2; // +2 pentru a evita scroll bar-ul vertical
-
-            // Calculează înălțimea totală
-            int totalHeight = dgvProfesori.ColumnHeadersHeight;
-            foreach (DataGridViewRow row in dgvProfesori.Rows)
-                totalHeight += row.Height;
-            dgvProfesori.Height = totalHeight + 2;
-
-            // Centrează DataGridView-ul
+            dgvProfesori.Width = Math.Min(totalWidth, this.ClientSize.Width - 40);
+            dgvProfesori.Height = Math.Min(totalHeight, this.ClientSize.Height - dgvProfesori.Top - 40);
             dgvProfesori.Left = (this.ClientSize.Width - dgvProfesori.Width) / 2;
             dgvProfesori.Top = btnAfiseazaRezultate.Bottom + 20;
         }
@@ -611,8 +592,6 @@ namespace InterfataUtilizator_WindowsForms
         private void BtnAfiseazaRezultateElevi_Click(object sender, EventArgs e)
         {
             string criteriu = txtCautareElev.Text.Trim();
-            AscundeFormularCautare();
-            panelCautareElevi.Visible = false;
             if (string.IsNullOrEmpty(criteriu))
             {
                 MessageBox.Show("Introduceți un criteriu de căutare!");
@@ -621,16 +600,16 @@ namespace InterfataUtilizator_WindowsForms
 
             int nrElevi;
             Elev[] elevi = adminElevi.GetElevi(out nrElevi);
-            List<Elev> eleviGasiti = new List<Elev>();
+            List<Elev> eleviGasiti;
 
             if (rbCautareNumeElev.Checked)
             {
-                eleviGasiti = elevi.Where(el => el.Nume.IndexOf(criteriu, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+                eleviGasiti = Elev.CautaEleviDupaNume(elevi.ToList(), criteriu);
             }
             else if (rbCautareVarstaElev.Checked)
             {
                 if (int.TryParse(criteriu, out int varstaCautata))
-                    eleviGasiti = elevi.Where(el => el.Varsta == varstaCautata).ToList();
+                    eleviGasiti = Elev.CautaEleviDupaVarsta(elevi.ToList(), varstaCautata);
                 else
                 {
                     MessageBox.Show("Introduceți o vârstă validă!");
@@ -639,8 +618,14 @@ namespace InterfataUtilizator_WindowsForms
             }
             else if (rbCautareClasaElev.Checked)
             {
-                eleviGasiti = elevi.Where(el => el.Clasa.ToString().Equals(criteriu, StringComparison.OrdinalIgnoreCase)).ToList();
+                eleviGasiti = Elev.CautaEleviDupaClasa(elevi.ToList(), criteriu);
             }
+            else
+            {
+                MessageBox.Show("Selectați un criteriu de căutare!");
+                return;
+            }
+
             if (eleviGasiti.Count == 0)
             {
                 MessageBox.Show("Nu s-a găsit niciun elev cu acest criteriu.");
@@ -657,9 +642,14 @@ namespace InterfataUtilizator_WindowsForms
                 item.SubItems.Add(el.Varsta.ToString());
                 listViewElevi.Items.Add(item);
             }
+
+            listViewElevi.Top = btnAfiseazaRezultateElevi.Bottom + 40;
+            listViewElevi.Width = this.ClientSize.Width - listViewElevi.Left - 40;
+            listViewElevi.Height = this.ClientSize.Height - listViewElevi.Top - 70;
+
             listViewElevi.Visible = true;
             dgvProfesori.Visible = false;
-            panelCautareElevi.Visible = false;
+            panelCautareElevi.Visible = true;
         }
 
         private void buttonCautareElevi_Click(object sender, EventArgs e)

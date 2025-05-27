@@ -21,7 +21,6 @@ namespace InterfataUtilizator_WidowsForms
             InitializeComponent();
             this.adminElevi = adminElevi;
             this.elevEditat = elev;
-            //this.Load += AdaugareElevForm_Load;
         }
 
         private void AdaugareElevForm_Load(object sender, EventArgs e)
@@ -68,7 +67,6 @@ namespace InterfataUtilizator_WidowsForms
                 eroarenume.Visible = false;
             }
 
-            // Email
             if (string.IsNullOrWhiteSpace(textBoxEMAIL.Text) || !textBoxEMAIL.Text.Contains("@"))
             {
                 eroareemail.Visible = true;
@@ -79,7 +77,6 @@ namespace InterfataUtilizator_WidowsForms
                 eroareemail.Visible = false;
             }
 
-            // Clasa
             string clasaSelectata = null;
             foreach (Control ctrl in panelCLASA.Controls)
             {
@@ -99,7 +96,6 @@ namespace InterfataUtilizator_WidowsForms
                 eroareCLASA.Visible = false;
             }
 
-            // Varsta
             int varstaSelectata = 0;
             foreach (Control ctrl in panelVARSTA.Controls)
             {
@@ -120,36 +116,34 @@ namespace InterfataUtilizator_WidowsForms
                 eroareVARSTA.Visible = false;
             }
 
-            // Dacă toate sunt valide, adaugă elevul
             if (valid)
-    {
-        string nume = textBoxNUME.Text.Trim();
-        string email = textBoxEMAIL.Text.Trim();
-        Clase clasa = (Clase)Enum.Parse(typeof(Clase), clasaSelectata);
+            {
+                string nume = textBoxNUME.Text.Trim();
+                string email = textBoxEMAIL.Text.Trim();
+                Clase clasa = (Clase)Enum.Parse(typeof(Clase), clasaSelectata);
 
-        if (elevEditat != null)
-        {
-            // Salvăm valorile vechi pentru identificare
-            string numeVechi = elevEditat.Nume;
-            string emailVechi = elevEditat.Email;
+                if (elevEditat != null)
+                {
+                    string numeVechi = elevEditat.Nume;
+                    string emailVechi = elevEditat.Email;
 
-            elevEditat.Nume = nume;
-            elevEditat.Email = email;
-            elevEditat.Clasa = clasa;
-            elevEditat.Varsta = varstaSelectata;
+                    elevEditat.Nume = nume;
+                    elevEditat.Email = email;
+                    elevEditat.Clasa = clasa;
+                    elevEditat.Varsta = varstaSelectata;
 
-            adminElevi.UpdateElevi(elevEditat, numeVechi, emailVechi);
-            MessageBox.Show("Elev modificat cu succes!");
-        }
-        else
-        {
-            Elev elevNou = new Elev(nume, email, clasa, varstaSelectata);
-            adminElevi.AddElev(elevNou);
-            MessageBox.Show("Elev adăugat cu succes!");
-        }
-        this.DialogResult = DialogResult.OK;
-        this.Close();
-    }
+                    adminElevi.UpdateElevi(elevEditat, numeVechi, emailVechi);
+                    MessageBox.Show("Elev modificat cu succes!");
+                }
+                else
+                {
+                    Elev elevNou = new Elev(nume, email, clasa, varstaSelectata);
+                    adminElevi.AddElev(elevNou);
+                    MessageBox.Show("Elev adăugat cu succes!");
+                }
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            }
         }
 
 

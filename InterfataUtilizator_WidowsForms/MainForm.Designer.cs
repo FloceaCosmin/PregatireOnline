@@ -36,7 +36,7 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.SystemColors.Desktop;
-            this.label1.Location = new System.Drawing.Point(193, 22);
+            this.label1.Location = new System.Drawing.Point(242, 21);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(288, 64);
             this.label1.TabIndex = 0;
@@ -47,7 +47,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.ClientSize = new System.Drawing.Size(724, 566);
+            this.ClientSize = new System.Drawing.Size(724, 433);
             this.Controls.Add(this.label1);
             this.Name = "MainForm";
             this.Text = "Meniu Principal";

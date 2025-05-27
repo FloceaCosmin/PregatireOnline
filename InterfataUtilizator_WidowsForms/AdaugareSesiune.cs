@@ -26,14 +26,12 @@ namespace InterfataUtilizator_WidowsForms
         {
             bool valid = true;
 
-            // Validare nume profesor
             if (string.IsNullOrWhiteSpace(tboxProfesor.Text))
             {
                 MessageBox.Show("Introduceți numele profesorului!");
                 valid = false;
             }
 
-            // Validare materie selectată
             Materie materieSelectata = Materie.Nimic;
             if (radioButtonMS.Checked) materieSelectata = Materie.Matematica;
             else if (radioButtonRS.Checked) materieSelectata = Materie.Romana;
@@ -46,14 +44,12 @@ namespace InterfataUtilizator_WidowsForms
                 valid = false;
             }
 
-            // Validare link
             if (string.IsNullOrWhiteSpace(txtBoxLink.Text))
             {
                 MessageBox.Show("Introduceți link-ul sesiunii!");
                 valid = false;
             }
 
-            // Dacă totul e valid, creează sesiunea
             if (valid)
             {
                 string numeProfesor = tboxProfesor.Text.Trim();
@@ -67,6 +63,11 @@ namespace InterfataUtilizator_WidowsForms
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
+
+        }
+
+        private void AdaugareSesiune_Load(object sender, EventArgs e)
+        {
 
         }
     }

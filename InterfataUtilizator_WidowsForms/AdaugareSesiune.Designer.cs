@@ -53,6 +53,7 @@
             this.label1.Size = new System.Drawing.Size(210, 22);
             this.label1.TabIndex = 1;
             this.label1.Text = "ADAUGARE SESIUNE";
+            this.label1.UseWaitCursor = true;
             // 
             // tboxProfesor
             // 
@@ -60,6 +61,7 @@
             this.tboxProfesor.Name = "tboxProfesor";
             this.tboxProfesor.Size = new System.Drawing.Size(100, 22);
             this.tboxProfesor.TabIndex = 2;
+            this.tboxProfesor.UseWaitCursor = true;
             // 
             // label2
             // 
@@ -70,6 +72,7 @@
             this.label2.Size = new System.Drawing.Size(74, 18);
             this.label2.TabIndex = 3;
             this.label2.Text = "Profesor";
+            this.label2.UseWaitCursor = true;
             // 
             // label3
             // 
@@ -80,6 +83,7 @@
             this.label3.Size = new System.Drawing.Size(64, 18);
             this.label3.TabIndex = 4;
             this.label3.Text = "Materie";
+            this.label3.UseWaitCursor = true;
             // 
             // label4
             // 
@@ -90,6 +94,7 @@
             this.label4.Size = new System.Drawing.Size(43, 18);
             this.label4.TabIndex = 5;
             this.label4.Text = "Data";
+            this.label4.UseWaitCursor = true;
             // 
             // label5
             // 
@@ -100,6 +105,7 @@
             this.label5.Size = new System.Drawing.Size(39, 18);
             this.label5.TabIndex = 6;
             this.label5.Text = "Link";
+            this.label5.UseWaitCursor = true;
             // 
             // txtBoxLink
             // 
@@ -107,6 +113,7 @@
             this.txtBoxLink.Name = "txtBoxLink";
             this.txtBoxLink.Size = new System.Drawing.Size(100, 22);
             this.txtBoxLink.TabIndex = 7;
+            this.txtBoxLink.UseWaitCursor = true;
             // 
             // radioButtonMS
             // 
@@ -119,6 +126,7 @@
             this.radioButtonMS.TabStop = true;
             this.radioButtonMS.Text = "Matematica";
             this.radioButtonMS.UseVisualStyleBackColor = true;
+            this.radioButtonMS.UseWaitCursor = true;
             // 
             // radioButtonCS
             // 
@@ -131,6 +139,7 @@
             this.radioButtonCS.TabStop = true;
             this.radioButtonCS.Text = "Chimie";
             this.radioButtonCS.UseVisualStyleBackColor = true;
+            this.radioButtonCS.UseWaitCursor = true;
             // 
             // radioButtonBS
             // 
@@ -143,6 +152,7 @@
             this.radioButtonBS.TabStop = true;
             this.radioButtonBS.Text = "Biologie";
             this.radioButtonBS.UseVisualStyleBackColor = true;
+            this.radioButtonBS.UseWaitCursor = true;
             // 
             // radioButtonIS
             // 
@@ -155,6 +165,7 @@
             this.radioButtonIS.TabStop = true;
             this.radioButtonIS.Text = "Informatica";
             this.radioButtonIS.UseVisualStyleBackColor = true;
+            this.radioButtonIS.UseWaitCursor = true;
             // 
             // radioButtonRS
             // 
@@ -167,6 +178,7 @@
             this.radioButtonRS.TabStop = true;
             this.radioButtonRS.Text = "Romana";
             this.radioButtonRS.UseVisualStyleBackColor = true;
+            this.radioButtonRS.UseWaitCursor = true;
             // 
             // dateTimePicker1
             // 
@@ -174,6 +186,7 @@
             this.dateTimePicker1.Name = "dateTimePicker1";
             this.dateTimePicker1.Size = new System.Drawing.Size(224, 22);
             this.dateTimePicker1.TabIndex = 14;
+            this.dateTimePicker1.UseWaitCursor = true;
             // 
             // btAddSesiune
             // 
@@ -186,6 +199,7 @@
             this.btAddSesiune.TabIndex = 15;
             this.btAddSesiune.Text = "ADAUGARE\r\n  SESIUNE";
             this.btAddSesiune.UseVisualStyleBackColor = false;
+            this.btAddSesiune.UseWaitCursor = true;
             this.btAddSesiune.Click += new System.EventHandler(this.btAddSesiune_Click);
             // 
             // AdaugareSesiune
@@ -212,6 +226,7 @@
             this.Text = "AdaugareSesiune";
             this.TopMost = true;
             this.UseWaitCursor = true;
+            this.Load += new System.EventHandler(this.AdaugareSesiune_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

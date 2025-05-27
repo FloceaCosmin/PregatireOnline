@@ -209,7 +209,7 @@
             this.eroareVARSTA.AutoSize = true;
             this.eroareVARSTA.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Italic);
             this.eroareVARSTA.ForeColor = System.Drawing.Color.Red;
-            this.eroareVARSTA.Location = new System.Drawing.Point(471, 350);
+            this.eroareVARSTA.Location = new System.Drawing.Point(380, 350);
             this.eroareVARSTA.Name = "eroareVARSTA";
             this.eroareVARSTA.Size = new System.Drawing.Size(115, 16);
             this.eroareVARSTA.TabIndex = 41;
